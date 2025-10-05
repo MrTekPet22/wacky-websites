@@ -1,0 +1,2030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MrTekPet2013</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --bg-dark: #1a082b;
+            --bg-medium: #2d1a42;
+            --bg-light: #402c58;
+            --text-light: #f0f0f0;
+            --text-medium: #d0d0d0;
+            --accent-purple: #bb86fc;
+            --accent-blue: #82aaff;
+            --border-color: rgba(109, 40, 217, 0.5);
+            --shadow-color: rgba(139, 92, 246, 0.3);
+            --quiz-bg: rgba(30, 0, 60, 0.8);
+            --quiz-text: #E0E7FF;
+            --quiz-radio-border: #6D28D9;
+            --quiz-radio-bg: #1A0033;
+            --quiz-radio-checked: #8B5CF6;
+            --quiz-radio-dot: #FFFFFF;
+            --quiz-radio-focus-shadow: rgba(139, 92, 246, 0.5);
+            --quiz-card-bg: rgba(30, 0, 60, 0.8);
+            --quiz-card-border: rgba(109, 40, 217, 0.5);
+            --quiz-score-bg: rgba(75, 0, 130, 0.7);
+            --quiz-score-text: #E0E7FF;
+            --quiz-score-highlight: #FCD34D;
+            --success-bg: rgba(21, 128, 61, 0.5);
+            --success-border: #166534;
+            --success-text: #86EFAC;
+            --error-bg: rgba(153, 27, 27, 0.5);
+            --error-border: #991B1B;
+            --error-text: #F87171; /* Red-300 */
+            --button-primary-bg: #bb86fc;
+            --button-primary-text: #ffffff;
+            --button-secondary-bg: #82aaff;
+            --button-secondary-text: #ffffff;
+            --navbar-bg: #2d1a42; /* Darker grey-purple for navbar */
+            --footer-bg: #2d1a42; /* Darker grey-purple for footer */
+            --text-default: #f0f0f0; /* Default text colour */
+            --dropdown-bg-dark: #3a2b53; /* Slightly lighter than navbar for dark mode */
+        }
+        /* Light Mode Overrides */
+        body.light-mode {
+            --bg-dark: #fbfbfb; /* Very light background */
+            --bg-medium: #f2f2f2; /* Slightly darker light background */
+            --bg-light: #e6e6e6; /* Even darker light background */
+            --text-light: #1a082b; /* Dark text for contrast */
+            --text-medium: #2d1a42; /* Slightly lighter dark text */
+            --accent-purple: #6c42a2; /* Deeper purple for light mode */
+            --accent-blue: #3d7ee0; /* Stronger blue for light mode */
+            --border-color: rgba(90, 130, 200, 0.5); /* Blue-ish border for light mode */
+            --shadow-color: rgba(90, 130, 200, 0.3); /* Blue-ish shadow for light mode */
+            --quiz-bg: rgba(255, 255, 255, 0.9); /* White transparent quiz background */
+            --quiz-text: #1a082b; /* Dark text for quiz in light mode */
+            --quiz-radio-border: #4a90e2; /* Blue */
+            --quiz-radio-bg: #ffffff; /* White background for unselected radio */
+            --quiz-radio-checked: #4a90e2; /* Blue when checked */
+            --quiz-radio-dot: #FFFFFF;
+            --quiz-radio-focus-shadow: rgba(74, 144, 226, 0.5);
+            --quiz-card-bg: rgba(240, 240, 240, 0.9); /* Light grey card background */
+            --quiz-card-border: rgba(120, 160, 220, 0.5);
+            --quiz-score-bg: rgba(230, 240, 255, 0.9); /* Light blue-ish for results */
+            --quiz-score-text: #1a082b;
+            --quiz-score-highlight: #D4A700; /* Darker yellow/gold */
+            --success-bg: rgba(200, 250, 200, 0.8);
+            --success-border: #60B88F;
+            --success-text: #28a745;
+            --error-bg: rgba(153, 27, 27, 0.5);
+            --error-border: #991B1B;
+            --error-text: #F87171;
+            --button-primary-bg: #82aaff;
+            --button-primary-text: #1a082b;
+            --button-secondary-bg: #bb86fc;
+            --button-secondary-text: #1a082b;
+            --navbar-bg: #e0e0e0; /* Light grey for navbar */
+            --footer-bg: #e0e0e0; /* Light grey for footer */
+            --text-default: #1a082b; /* Default text colour in light mode */
+            --dropdown-bg-light: #d0d0d0; /* Slightly darker than navbar for light mode */
+        }
+        /* Apply CSS variables to global elements and Tailwind overrides */
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+        }
+        html {
+            scroll-padding-top: 0px; /* Will be set dynamically by JS */
+        }
+        .bg-space-dark { background-color: var(--bg-dark); }
+        .bg-space-medium { background-color: var(--bg-medium); }
+        .bg-space-light { background-color: var(--bg-light); }
+        .text-star-light { color: var(--text-light); }
+        .text-star-medium { color: var(--text-medium); }
+        .text-accent-purple { color: var(--accent-purple); }
+        .text-accent-blue { color: var(--accent-blue); }
+        .border-accent-purple { border-color: var(--accent-purple); }
+        .hover\:bg-accent-purple:hover { background-color: var(--accent-purple); }
+        .hover\:text-accent-purple:hover { color: var(--accent-purple); }
+        .hover\:bg-accent-blue:hover { background-color: var(--accent-blue); }
+        .hover\:text-accent-blue:hover { color: var(--accent-blue); }
+        nav { background-color: var(--navbar-bg); }
+        footer { background-color: var(--footer-bg); }
+        #aboutUsBtn { /* Updated ID */
+             background-color: var(--button-primary-bg);
+             color: var(--button-primary-text);
+        }
+        #learnMoreBtn {
+            border-color: var(--accent-blue);
+            color: var(--button-secondary-text);
+        }
+        #learnMoreBtn:hover {
+            background-color: var(--accent-blue);
+            color: var(--text-light);
+        }
+        /* Specific glow for H1 based on theme */
+        body:not(.light-mode) .h1-glow {
+            text-shadow: 0 0 8px rgba(187, 134, 252, 0.7), 0 0 15px rgba(130, 170, 255, 0.5);
+        }
+        body.light-mode .h1-glow {
+            text-shadow: none; /* No glow in light mode */
+        }
+        /* General styles from previous versions */
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+        /* Nav Logo Marquee */
+        .logo-text-marquee-container {
+            flex-shrink: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 200px; /* Or a more responsive width like w-1/4, w-1/3 depending on desired responsiveness */
+            height: 30px; /* Align with text height */
+            display: flex;
+            align-items: center;
+            margin-left: 0.5rem; /* Space between logo image and text */
+        }
+        .logo-marquee-content {
+            display: inline-block; /* Essential for content width calculation */
+            animation: logoMarquee 20s linear infinite;
+        }
+        .logo-text-marquee-container:hover .logo-marquee-content {
+            animation-play-state: paused;
+        }
+        @keyframes logoMarquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } /* Move half the total content width for seamless loop */
+        }
+        /* Home Page Marquee Container Styles (for News & Updates) */
+        .home-marquee-container {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            padding: 0.5rem 1.5rem;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            box-sizing: border-box;
+            border-radius: 0.5rem; /* Rounded corners */
+            margin-top: 2rem; /* Space from hero section */
+            margin-bottom: 2rem; /* Space to features section */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* Subtle shadow */
+            height: 30px; /* Fixed height for marquee to prevent content jump */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .home-marquee-content {
+            display: inline-block; /* Essential for content width calculation */
+            animation: marquee 40s linear infinite;
+        }
+        .home-marquee-container:hover .home-marquee-content {
+            animation-play-state: paused;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } /* Move half the total content width for seamless loop */
+        }
+        /* Full-page Three.js canvas */
+        .threejs-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            z-index: -1;
+        }
+        /* Hero section content container */
+        .hero-content-wrapper {
+            position: relative;
+            z-index: 10;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+        /* Modal Styles */
+        .modal {
+            display: none; /* Controlled by JS, but default to hidden */
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: var(--bg-medium);
+            margin: auto;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            position: relative;
+            text-align: center;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+        /* Removed .modal .close-button from here */
+        /* Section transition effect */
+        .content-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+        .content-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Dropdown menu specific styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            color: var(--text-medium);
+            font-weight: 500;
+            border-radius: 0.375rem;
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .dropdown:hover {
+            color: var(--accent-blue);
+        }
+        .dropdown > a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        /* Adjusted arrow rotation */
+        .dropdown-arrow {
+            transition: transform 0.3s ease-in-out;
+            transform: rotate(180deg); /* Default: points up */
+        }
+        .dropdown.open .dropdown-arrow {
+            transform: rotate(0deg); /* When open: points down */
+        }
+        /* Adjusted dropdown content positioning and background for contrast */
+        .dropdown-content {
+            display: none; /* Hidden by default */
+            position: absolute;
+            background-color: var(--dropdown-bg-dark);
+            box-shadow: 0 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            top: calc(100% + 8px); /* Position below the toggle */
+            right: 0; /* Align to the right edge of its parent */
+            padding: 8px;
+            flex-direction: row; /* Always horizontal */
+            gap: 10px;
+            justify-content: flex-end; /* Align items to the end (right) */
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            min-width: max-content; /* Ensure dropdown is wide enough for content */
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+        body.light-mode .dropdown-content {
+            background-color: var(--dropdown-bg-light);
+        }
+        .dropdown.open .dropdown-content {
+            display: flex; /* Show as flex when open */
+        }
+        @media (max-width: 768px) {
+            .dropdown-content {
+                left: 0; /* Reset to left for small screens if right causes overflow */
+                right: auto; /* Remove right alignment */
+                transform: translateX(0); /* Remove transform */
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+        .dropdown-content a {
+            color: var(--text-medium);
+            padding: 8px 12px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: background-color 0.2s ease;
+            font-family: 'DM Sans', sans-serif;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+        .dropdown-content a:hover {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+        }
+        /* Quiz Page Specific Styles */
+        .quiz-page-container {
+            background-color: var(--quiz-bg);
+            backdrop-filter: blur(3px);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0 15px var(--shadow-color);
+            color: var(--quiz-text);
+            padding: 20px;
+            border-radius: 20px;
+            overflow-y: auto;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .quiz-page-container input[type="radio"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            border: 2px solid var(--quiz-radio-border);
+            background-color: var(--quiz-radio-bg);
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .quiz-page-container input[type="radio"]:checked {
+            background-color: var(--quiz-radio-checked);
+            border-color: var(--quiz-radio-checked);
+        }
+        .quiz-page-container input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background-color: var(--quiz-radio-dot);
+        }
+        .quiz-page-container input[type="radio"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--quiz-radio-focus-shadow);
+        }
+        .quiz-page-container label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            text-align: left;
+        }
+        .question-card {
+            background-color: var(--quiz-card-bg);
+            backdrop-filter: blur(5px);
+            width: 100%;
+            text-align: left;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--quiz-card-border);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .question-card .options {
+            text-align: left;
+        }
+        /* Updated styles for submit and retake quiz buttons */
+        .submit-button, #retake-quiz-btn {
+            background: linear-gradient(to right, var(--accent-purple), var(--accent-blue));
+            border: none;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 9999px; /* Pill shape */
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .submit-button:hover, #retake-quiz-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 25px var(--accent-purple);
+        }
+        .submit-button:active, #retake-quiz-btn:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        /* Light mode specific styles for quiz buttons */
+        body.light-mode .submit-button, body.light-mode #retake-quiz-btn {
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+            color: var(--text-light);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        body.light-mode .submit-button:hover, body.light-mode #retake-quiz-btn:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 0 25px var(--accent-blue);
+        }
+        /* Quiz Results Styling */
+        #results-container {
+            background-color: var(--quiz-score-bg);
+            border: 1px solid var(--quiz-card-border);
+        }
+        #score-display {
+            color: var(--quiz-score-text);
+        }
+        #score-display span {
+            color: var(--quiz-score-highlight);
+        }
+        #feedback-details .bg-green-900 { /* Tailwind class, mapped to variable */
+            background-color: var(--success-bg);
+            border-color: var(--success-border);
+        }
+        #feedback-details .text-green-300 { /* Tailwind class, mapped to variable */
+            color: var(--success-text);
+        }
+        #feedback-details .bg-red-900 { /* Tailwind class, mapped to variable */
+            background-color: var(--error-bg);
+            border-color: var(--error-border);
+        }
+        #feedback-details .text-red-300 { /* Tailwind class, mapped to variable */
+            color: var(--error-text);
+        }
+        #feedback-details .text-green-400 { /* Tailwind class, mapped to variable */
+            color: var(--success-text);
+        }
+        /* Custom scrollbar for better aesthetics within modal if needed */
+        .quiz-page-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .quiz-page-container::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+            border-radius: 10px;
+        }
+        .quiz-page-container::-webkit-scrollbar-thumb {
+            background: var(--quiz-radio-border);
+            border-radius: 10px;
+        }
+        .quiz-page-container::-webkit-scrollbar-thumb:hover {
+            background: var(--quiz-radio-checked);
+        }
+        /* Announcement Banner Styles */
+        .announcement-banner {
+            background-color: #eab308;
+            color: #1a202c;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            flex-wrap: wrap;
+            height: auto;
+            min-height: 60px;
+        }
+        .announcement-banner button {
+            background-color: #1a202c;
+            color: #eab308;
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .announcement-banner button:hover {
+            background-color: #4a5568;
+        }
+        /* Navigation Bar - fixed and positioned dynamically */
+        nav {
+            position: fixed;
+            left: 0;
+            width: 100%;
+            z-index: 90;
+        }
+        /* Media query for smaller screens to adjust padding-top if needed */
+        @media (max-width: 767px) {
+            .announcement-banner {
+                padding: 0.75rem 1rem;
+            }
+        }
+        /* New styles for the modal proceed button */
+        #modalProceedBtn {
+            background: linear-gradient(to right, var(--accent-purple), var(--accent-blue));
+            border: none;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 9999px; /* Pill shape */
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        #modalProceedBtn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 25px var(--accent-purple);
+        }
+        #modalProceedBtn:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        /* Light mode specific styles for the modal proceed button */
+        body.light-mode #modalProceedBtn {
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+            color: var(--text-light); /* Ensure text is visible on lighter background */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        body.light-mode #modalProceedBtn:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 0 25px var(--accent-blue);
+        }
+    </style>
+</head>
+<body class="bg-space-dark text-star-light">
+    <audio id="backgroundMusic" loop autoplay>
+        <source src="https://dl.dropboxusercontent.com/scl/fi/dkrs0oc0jvtg9xghqye8l/inspiring-cinematic-ambient-255033.mp3?rlkey=42pu1bucaixq9ncgfq5wdo2qp&e=1&st=qf8fyjbk" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <div class="announcement-banner" id="quizAnnouncementBanner">
+        <span>Blast Off With This Planet Trivia Quiz!!!</span>
+        <button id="openQuizBtn">Are you ready?</button>
+    </div>
+    <canvas id="threeJsCanvas" class="threejs-canvas"></canvas>
+    <nav class="shadow-lg py-4 px-6 rounded-b-lg" style="background-color: var(--navbar-bg);">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <a href="#home-section" class="flex items-center space-x-2 text-2xl font-bold text-accent-purple mb-4 md:mb-0 nav-link">
+                <img src="https://uc4035e30bb4e37196c7821e018c.previews.dropboxusercontent.com/p/thumb/ACxW6f5nb2dYRUXloMKJUfg3bdIGSBPFRZ0ExZw_J68AMhy_X8DjAjI8QL8uGDprQw4ds1Z7UbAAFBlq2Yh-aWNiDDNhXypQPNdUdq_HHNzCmpOjJFGNfIAr4JzqsZ5TuwL5Sq1FeGh128wB7fwH20Z6GjFyG9IjumzA2E3W8wCwrdklP7ygAMybuqSKMSC1jtKy7JOnwWkDdvoRC15j8IYstk9BJx8FVxnsP_Gbmt0vpGW82qD_se_TdamiZaAe4Tvze9hOLpe6sGvq8wX4N5I3WvDaR62toJxu4-wyXyKzrlga3e9sszsa56xvY3Z8KiOVMgLWybvkKBOBfKv9StJzWlzAnbBu191zVtHG8ud-MljuX_8qFBmW-d-BSYICMgg/p.jpeg?is_prewarmed=true" alt="Gemini Voyages Logo" class="h-16 w-16 rounded-full">
+                <div class="logo-text-marquee-container hidden md:block">
+                    <span class="logo-marquee-content">MrTekPet2013 &bull; html, css, and js coder &bull; I LOVE CHOCOLATE!!!!!! &bull; bread is the best &bull; naan specifically &bull; and turkish bread #türkiye &bull; </span>
+                </div>
+            </a>
+            <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 items-center flex-grow justify-end">
+                <a href="#home-section" class="nav-link text-star-medium hover:text-accent-blue font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out">Home</a>
+                <a href="#about" class="nav-link text-star-medium hover:text-accent-blue font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out">About Us</a>
+                <a href="#your-stay-section" class="nav-link text-star-medium hover:text-accent-blue font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out">Your Stay</a>
+                <div class="dropdown text-star-medium hover:text-accent-blue font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out">
+                    <a href="#" id="planetsDropdownToggle" class="flex items-center">
+                        Planets
+                        <svg class="inline-block w-4 h-4 ml-1 -mt-1 dropdown-arrow" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="#mercury-section" class="nav-link" title="Explore the scorching hot Mercury!">Mercury</a>
+                        <a href="#venus-section" class="nav-link" title="Journey to Earth's cloud-veiled sister, Venus!">Venus</a>
+                        <a href="#earth-section" class="nav-link" title="Return to our vibrant home, Earth!">Earth</a>
+                        <a href="#mars-section" class="nav-link" title="Discover the mysteries of the Red Planet, Mars!">Mars</a>
+                        <a href="#jupiter-section" class="nav-link" title="Witness the giant, stormy Jupiter!">Jupiter</a>
+                        <a href="#saturn-section" class="nav-link" title="Behold the magnificent rings of Saturn!">Saturn</a>
+                        <a href="#uranus-section" class="nav-link" title="Visit the tilted ice giant, Uranus!">Uranus</a>
+                        <a href="#neptune-section" class="nav-link" title="Experience the distant, windy world of Neptune!">Neptune</a>
+                    </div>
+                </div>
+                <a href="#gallery-section" class="nav-link text-star-medium hover:text-accent-blue font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out">Gallery</a>
+                <a href="#connect-section" class="nav-link text-star-medium hover:text-accent-blue font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out">Contact Us</a>
+                <button id="themeToggleBtn" class="text-star-medium hover:text-accent-blue font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out flex items-center justify-center">
+                    <svg id="moonIcon" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <svg id="sunIcon" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="6"/>
+                        <rect x="11" y="2" width="2" height="4"/>
+                        <rect x="11" y="18" width="2" height="4"/>
+                        <rect x="2" y="11" width="4" height="2"/>
+                        <rect x="18" y="11" width="4" height="2"/>
+                        <rect x="11" y="2" width="2" height="4" transform="rotate(45 12 12)"/>
+                        <rect x="11" y="2" width="2" height="4" transform="rotate(135 12 12)"/>
+                        <rect x="11" y="2" width="2" height="4" transform="rotate(225 12 12)"/>
+                        <rect x="11" y="2" width="2" height="4" transform="rotate(315 12 12)"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <main class="container mx-auto px-4 py-8">
+        <section id="home-section" class="content-section active">
+            <header class="text-star-light rounded-lg m-4 shadow-xl hero-content-wrapper">
+                <div class="max-w-4xl mx-auto">
+                    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6 h1-glow">
+                        MrTekPet2013
+                    </h1>
+                    <p class="text-lg md:text-xl mb-10 max-w-2xl mx-auto text-star-medium">
+                        Welcome to my website!
+                    </p>
+                    <div class="flex justify-center space-x-4">
+                        <button id="aboutUsBtn" class="bg-white text-gray-900 hover:bg-gray-200 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out button-glow">
+                            About Me
+                        </button>
+                        <button id="learnMoreBtn" class="border border-accent-blue text-white hover:bg-accent-blue hover:text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out button-glow">
+                            Try my quiz!!!
+                        </button>
+                    </div>
+                </div>
+            </header>
+            <div id="homeMarqueeContainer" class="home-marquee-container">
+                <span class="home-marquee-content">NEWS & UPDATES: Nothing &bull; I never sleep &bull; I'm bored! &bull; Stop looking at me &bull; theres nothing here - SCROLL DOWN ALREADY!!!!!!!!!</span>
+            </div>
+            <section id="features-section-inner" class="py-16 px-6 bg-space-medium rounded-lg shadow-lg my-8">
+                <div class="container mx-auto text-center">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-8 text-accent-purple">Our Spaceship</h2>
+                    <img src="https://previews.dropbox.com/p/thumb/ACu3W03TiTFSXCqNWJpSHuiwP7UBFTd1OWXOqL1Hpcb-87cfS5DRSoTEHB7CD_qix01R-eEME-myriBQk0ABplHye1aQAZn6jKeGkYTKIsBa-MbLAk464AOCu-EfxSJ1i-3PDyHNWJazqbIH-TTZzzhuc3NJ113n9gljGNyZVnoQqJTXDK2kjrZKS84vZv2epCqs_FuXX9uTpV2IrP_31Z7Eh7i6EXV8w2aHwKfMG5-3Qche68mqt9nGKQRVit1JpYqy-jjxYr9WuDu2dKB4Z4k34WBYRpbxAf7ljLlDGxYhfuxx8r9-EPzXrkzqGeDm0qp2AT9dAnf8CcwFZYMOghHs/p.png?is_prewarmed=true" alt="Our Spaceship" class="mx-auto my-8 rounded-lg shadow-md w-full max-w-lg h-auto object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x300/402c58/f0f0f0?text=Rocket+Image+Not+Found';">
+                    <p class="text-lg text-star-medium mb-12 max-w-3xl mx-auto">
+                        Here's a glimpse of the advanced spacecraft that will take you on your incredible journey!
+                    </p>
+                    <br>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-8 text-accent-purple">Why Choose Us?</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="bg-space-light rounded-xl shadow-lg p-8 transform hover:scale-105 transition duration-300 ease-in-out">
+                            <div class="text-accent-blue mb-4">
+                                <svg class="h-10 w-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-1.75-3M13.5 10H15a1 1 0 011 1v6h-4v-6a1 1 0 011-1zm-3 0V7a1 1 0 011-1h2a1 1 0 011 1v3"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-4 text-star-light">Cutting-Edge Technology</h3>
+                            <p class="text-star-medium">
+        All the spacecraft in our fleet come with the latest and most powerful technology as standard; making sure that your trip is efficient.                           </p>
+                        </div>
+                        <div class="bg-space-light rounded-xl shadow-lg p-8 transform hover:scale-105 transition duration-300 ease-in-out">
+                            <div class="text-accent-purple mb-4">
+                                <svg class="h-10 w-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-4 text-star-light">Unmatched Reliability</h3>
+                            <p class="text-star-medium">
+                                We have a flawless safety record and consistent high performance.
+                            </p>
+                        </div>
+                        <div class="bg-space-light rounded-xl shadow-lg p-8 transform hover:scale-105 transition duration-300 ease-in-out">
+                            <div class="text-red-400 mb-4">
+                                <svg class="h-10 w-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-2 4h4m-4-7h4M3 12h18M6 4h12a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2zm0 0V4m0 0H6"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-4 text-star-light">Dedicated Support Team</h3>
+                            <p class="text-star-medium">
+                                Our knowledgeable crew is available 24/7 to ensure an enjoyable journey.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <img src="https://previews.dropbox.com/p/thumb/ACudSIGSg21Kn0HnwNFdOL31En61oZQHeSBuVitKKt04r_BlASPyuXNQ80ODYFhn_KJUxrJ8y2OePAhG5wYaEIqSQBEG8WBFlGKNxWydYe2LTqNkNJpdRXlJZSSGuhbKwAnJ5olcar_4RdX16QyfouyGw_2PaIlLz4127NMotyYXlX-L5CxGu5lQ5AKCHWx3yxUSzlLftWe9z3yJS1E0p4Lva_Ey9sQj2rTwVbLuZnGoJFIVCwJzZfvL3Etpgob4omxJLuThHZGnQTB6f-bWX8Dp1CYSOkYKLRXGf273dMt_vX9QCqGZGfl0reIXjv79hSk/p.png" alt="Our Poster" class="mx-auto my-8 rounded-lg shadow-md w-full max-w-lg h-auto object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x300/402c58/f0f0f0?text=Image+Not+Found';">
+            </section>
+        </section>
+        <section id="about" class="content-section py-16 px-6 bg-space-medium rounded-lg shadow-lg my-8">
+            <div class="container mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-8 text-accent-purple">About Us</h2>
+                <p class="text-lg text-star-medium mb-6 max-w-3xl mx-auto">
+                    We are Gemini Voyages, a luxury intergalactic airline which is your 1# go-to shuttle for venturing through the vast expanse of cosmos which is our Solar System. We provide flights to a wide variety of destinations, including to/from Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune.
+                </p>
+                <p class="text-star-medium max-w-3xl mx-auto">
+                    We are offering this service after our successful mission last year; in which our crew developed a database of safe planets; based on distance from Earth, gravitational strength, surface pressure, and chemical makeup of the atmosphere.
+                </p>
+                <div class="mt-10 flex flex-wrap justify-center gap-6">
+                    <div class="p-6 bg-space-light rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border-l-4 border-accent-blue">
+                        <h4 class="text-xl font-semibold text-accent-blue mb-2">Our Galactic Vision</h4>
+                        <p class="text-star-medium">To be the leading star in interstellar travel, making the cosmos accessible to all.</p>
+                    </div>
+                    <div class="p-6 bg-space-light rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border-l-4 border-accent-purple">
+                        <h4 class="text-xl font-semibold text-accent-purple mb-2">Our Core Elements</h4>
+                        <p class="text-star-medium">Safety, Exploration, Customer Experience.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="your-stay-section" class="content-section py-16 px-6 bg-space-medium rounded-lg shadow-lg my-8">
+            <div class="container mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-8 text-accent-purple">Your Stay</h2>
+                <p class="text-lg text-star-medium mb-6 max-w-3xl mx-auto">
+                    Your space adventure includes delicious food, fun activities, and different flight plans to choose from. The cost is based on these 3 factors.
+                </p>
+                <h3 class="text-2xl font-bold mt-10 mb-6 text-accent-blue">Finances Spreadsheet (Cost & Prices)</h3>
+                <div class="relative w-full overflow-hidden mb-12" style="padding-top: 56.25%;">
+                    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSZEz8457xJFf18X-cKLR6zoWQ0NwP2J60MBB-5h597GA5vmMj5iD24B8BEHggrWQ-S2f3siVRAMgJU/pubhtml?widget=true&amp;headers=false" class="absolute top-0 left-0 w-full h-full border-0 rounded-lg shadow-md" allowfullscreen></iframe>
+                </div>
+                <h3 class="text-2xl font-bold mt-10 mb-6 text-accent-purple">Delicious Food Options</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    <div class="bg-space-light rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://coimages.sciencemuseumgroup.org.uk/334/324/medium_2018_0583__0001_.jpg" alt="Gourmet Space Meal" class="w-full h-48 object-cover rounded-md mb-4">
+                        <h4 class="text-xl font-semibold mb-2 text-star-light">Chicken Curry</h4>
+                        <p class="text-star-medium">Chicken curry, when made for space, offers key benefits for astronauts. It's calorie-dense, helping maintain strength in microgravity. Its bold flavours combat the dulled sense of taste astronauts often experience, boosting morale. Crucially, it's designed to be non-crumbly and easy to prepare, preventing messes and simplifying life in zero-G. Finally, its long shelf life makes it perfect for extended missions.
+</p>
+                    </div>
+                    <div class="bg-space-light rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://ids.si.edu/ids/deliveryService?id=NASM-86A0893244412_02&max=900" alt="Comfort Space Food" class="w-full h-48 object-cover rounded-md mb-4">
+                        <h4 class="text-xl font-semibold mb-2 text-star-light">Granola and Raisin Fruit Bar</h4>
+                        <p class="text-star-medium">Granola and raisin fruit bars are compact, require no preparation, and are designed to deliver a high density of calories, vitamins, and minerals in a small package. They are often formulated to be non-crumbly and easy to consume without utensils. Excellent for quick, on-the-go nutrition during busy operational periods, or as emergency rations. Their solid form minimizes mess in microgravity.
+</p>
+                    </div>
+                </div>
+                <h3 class="text-2xl font-bold mt-10 mb-6 text-accent-blue">Fun Activities in Space</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                    <div class="bg-space-light rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACs-jqyqTfe6h0AMRD5VgOpJPe3qZ-AdWDeUQYzxOCriukNOw22YSnVNaapCi56Z6efVc9Nt1frXSg7fzbrgV5iIZ9O7T0rlY38pPiSQeVBeYKMT7dGKbu2fzX1CMpFSyCfcoT4WCHRZpKzIhSFX5E7sNSvsRMt2VxFI-ZCQuK14ugszRUL6qj7GGl5WumASuYukRVSCL40bCej_l9_5l08Lskub0Awyzx5o9IQyO3CuPCnfXai6uOEQ9GzauLDVsA7ldELWoztwu23hCvSTMTplOsGLDN_Hgfi1YmlV0La7pXp4G-v-qX1BF0A8sa3E_BM/p.png" alt="Astronaut Space-Walking" class="w-full h-36 object-cover rounded-md mb-4">
+                        <h4 class="text-xl font-semibold mb-2 text-star-light">Space-Walking</h4>
+                        <p class="text-star-medium">Float outside your spaceship and see amazing views of Earth or other planets, safely tied on!
+</p>
+                    </div>
+                    <div class="bg-space-light rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://placehold.co/300x200/bb86fc/1a082b?text=Martian+Mud+Mask" alt="Martian Mud Mask Treatment" class="w-full h-36 object-cover rounded-md mb-4">
+                        <h4 class="text-xl font-semibold mb-2 text-star-light">Martian Mud Mask Treatment</h4>
+                        <p class="text-star-medium">Relax with a special face mask made from mud found on Mars. It's a truly unique spa experience!
+</p>
+                    </div>
+                    <div class="bg-space-light rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACsjeFrFNNVMpTj-coiPLzKuWFSFuVASAGLZJdBbUUy24wovIfDLKdX-yiEmh3FBjSTUc5DhQ3NEj6IoHdgmykXCs4dr6Dic-w5SR-SY7Q7bXRTp5lCWfjqJeTIJzE-pIa4bsWXX1sVKIFvW63qHKNQ3-WTcooFGoPidWU5khYMOWcVPtUZlLKFNeMGHwUuji2HOiOEcDGIvIMA_nlqd-5tz6xPtMfMeR9umfONIwy1iw7FeZAMjwGqCs1Sii2-VcIWDhQQvcPbetBrvC3pXfSGENSGY7Ar1FrpH7wcWZtKipzUIO3qkVrEZkjSRvk0Kop4/p.png" alt="Space Sight-Seeing Tour" class="w-full h-36 object-cover rounded-md mb-4">
+                        <h4 class="text-xl font-semibold mb-2 text-star-light">Sight-Seeing (with tour guide)</h4>
+                        <p class="text-star-medium">See incredible planets and stars up close with our expert guides. Learn cool facts as you fly by!
+</p>
+                    </div>
+                    <div class="bg-space-light rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACsCM3hNkE72YFxMbi_jWUwJxYUJvGPkil8pePHbEDy_vhk1_-ka9OdoigLvGTKhBAT_6Rf-Fg5e8Kg1KjFpGgJZyjPWKAKfL34fpPDaxR8DQDNMQ3wagpx4tBUlONTA5DcgT2lwyBkSXMUZSwIdRwKDBakOYbeAm686Koo37b3kCjhHHs2KxfHdSkil6Gd095XP8hJroJwbUTYG3mpPc9LUAe0SbI-4h20xxnZY6ZSkaVVkZRw3WJYmKuUyxNcUG0lI8arbMpX4aOZL9JsLDpmmkQsdp5aotwWyTZbxQNozJ8UtOMMVk0tSM8EjSoRMpTI/p.png" alt="Rover Driving on Alien Surface" class="w-full h-36 object-cover rounded-md mb-4">
+                        <h4 class="text-xl font-semibold mb-2 text-star-light">Rover Driving</h4>
+                        <p class="text-star-medium">Drive a real space rover on pretend alien lands. See if you can steer in low gravity!
+</p>
+                    </div>
+                    <div class="bg-space-light rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACsoe84a1BIwRRiENYiZQN29Mi3-CK1cxRKRIAd3InHtUAAKX68QV9JmyLqvqOAvZEaVKcTZT-LpOvMJ2BDKWSCZGHQrIUa58VAYka8zfsxD_LMqByoK3IuUFDubOEjBvsrS-7OeJH-cgCxS6RApStSaN7IFWxWG9RBwu2EHtTpitmqnYAufeExuOTN_1Fgn3yCX3g5S_mDW5-iDhAgzRoD1poPNYSqCfxRRTSk_fbk0raWOTqz5l1T8to4K6dEFy8qyGpaneLMQx3MZkY54fi0a7BhakN-KdazMRgM9_GAHCVGlendF2KKKtjDD-iyv8eo/p.png" alt="Sandboarding on Dunes" class="w-full h-36 object-cover rounded-md mb-4">
+                        <h4 class="text-xl font-semibold mb-2 text-star-light">Sandboarding</h4>
+                        <p class="text-star-medium">Strap in and glide down the epic dunes of Mars and other desert planets. It's like snowboarding, but on a whole new world!</p>
+                    </div>
+                </div>
+                <h3 class="text-2xl font-bold mt-10 mb-6 text-accent-purple">Choose Your Flight Plan</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-space-light rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACsDevdqhKnKfIqZUp6IUqm9__iuIR6Rn6UVuLdo5fhFe0CR4wdlQeG6mzR9nBLrzLpAS9Z9qu56xoZqOaL6aprD_O3yZNZ1WeN6_a4geBwQyojbOjomJZko3VM6lq5_rJ_h17i3JRmEfODtFe3XQlZIzETYpprKI160OQV1j2QilxUHm8yTQIPSKZ_mOcuzYyaOm0if6CLMTZB6ogzqljXeZEsxm4KF35_2PQO8PNaUYEsz3uyKebDMPc2DJRc7jW1N-bB_J602xdphyYt2ujY5QAgVTLL6aSLrgQpmydJxIZKdoPPzt_a6wuatRSo9ig8/p.png" alt="Economy Flight Plan" class="w-full h-48 object-cover rounded-md mb-4">
+                        <h4 class="text-xl font-semibold mb-2 text-star-light">Silver</h4>
+                        <p class="text-star-medium">A comfortable and affordable trip to your chosen planet. Basic amenities included.</p>
+                    </div>
+                    <div class="bg-space-light rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACuOuq_KT8n41yYQ1QJQgiOSVIhE2Je5eNtodzrcXzIRqza0u7abCsx0G93Ha7IfIr73NP4a04WZWarqixtB2GFeSlJzTOulraksWO8IXjgba0gCrkYf9LlW9qvufUYSFsBigZNm8adNgKpFhbeJ_6w7-RSa9N6f7cKRJYGk_65DF-e7OpG3bJCOP-MYbSmLzc1dLNfR08yn42FzJTaymB852o3WfbH7At_MYDuaP8-fsfpmPQGPtxenZRZmntOML_8sdqnrX5qOSBKHJwyuNnbGRtmJVZO85qX-zGWh-VTY-T3tB2uUKYZ2rXh0wrWRjGA/p.png" alt="Business Class Flight Plan" class="w-full h-48 object-cover rounded-md mb-4">
+                        <h4 class="text-xl font-semibold mb-2 text-star-light">Gold</h4>
+                        <p class="text-star-medium">More space, better food, and extra comfort for a relaxed journey.</p>
+                    </div>
+                    <div class="bg-space-light rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACvziqXNSKg3PVFz4rBMMBEVWMRksYxzIvApoYV0KPnPx58Eexcg7tsYR73Ww1k7DCrJ6MdjRh5IIJicUS13hBWcO98zgNZbcNbhKnN9yvniYdjuU0DaaQZ8UWmG_fNqMhH8K0DmpZAOkwuYzG2LEVz4hLvAVVlAhYnBOJPzo3Zz9nAOsl0BhrfT7pdx-7GaFYeYJxjC14Lz_8pLEBGfwf0syrkpywbdxDN4e3Uu0HV6VLmvXIzTbdpmVxoFsCoUiulS4Yp5uOwRRX3uBE8RR0o8h75BWutDNmaLqmuRO7Vhn_XJrPTEQSPIXDat1WXEGQM/p.png" alt="First Class Flight Plan" class="w-full h-48 object-cover rounded-md mb-4">
+                        <h4 class="text-xl font-semibold mb-2 text-star-light">Platinum</h4>
+                        <p class="text-star-medium">The ultimate luxury space experience with private suites and personalised service.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="gallery-section" class="content-section py-16 px-6 bg-space-medium rounded-lg shadow-lg my-8">
+            <div class="container mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-8 text-accent-blue">Our Galactic Gallery</h2>
+                <br>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACuzo5Mvh9JAZkZ3sXSdTJfcAov7dgQ7FlMVR6B3Cl-h0DwPA0LX50bsohC20sx6McwTgtF2yiTAqZd1BBI4zX2TS2VuTN6fXrwfi9MnfpMeNr4bvOJQxh5iIlxrGJE4Wpv-7vqhsWd5TEY-uGWyVECjMqIoVqMrO44UzYsCp_YMx9vmL0sT0jvQDkzHRW-H2LVK4b65DWFLwOhV5OlLf2inVKD-XZjRWuJkxwOP-s4K3KMS5YckXlbmnLCyjMZLs1qbcR_Hk9CmA7ELmBSBULlsb1p3VwsVv6Fn5NcNBmG6hRloY7b2QefbTuv6iUEBlkc/p.png">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">A glimpse of our new spaceship.</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACtBa8jUPox6hbM5NUqCPmCE6FFRQASXdLO3wPBprP2UD4Wfmqejv3-UFSyTZtgzte6g586tITrDxfJNNXR_MTk8jx-XGeTq2VQeyZZFblgLRiEH6ITFgzQvTWIvnw9xo-6lboOIcdIg9sNrNcOlgnZlsRzWLXpHrPC2SCGvr0wKICi95Qs59SNyFKKmQ2ZYQOFcL5TNEVgCt2op56XR5V4zNDI5NhY2BS1qFb_E23yNrtDHKrgfAM6v38kpUzFz4e5ftW-vofzCzluISW9Ux9scFiILZi-3B8ImmGUsHf9ehjVplKHFnNLpEyxKPXrvwmc/p.png">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">The Silver Tier</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACtJBnGdk1YYx60jnvJ9-1IXm-VrmMoqUqyabvRQpvb4-jByu41MsadNoQP1y50-nlReKfsi4fd6X6u2iCFszj2jQICHjugPC4UxHmq4dgzXRQQslo4tYOSMYR1APLxTl-n5bh1xPLJiuw0XbXTRSf9fioNMoSI_NDsNzlVDYgOvUkI9kGIP0QXqU6RR4niq_9o3yz0NLdAkUSRF0fhaNRSlWQyjwrWbT5nLAFIySqaDSWA25ps2UV7W8VMxHneXRdqOB5lhcx8VTDAngADx2sZxZ1yurLsYwKbQzCx6N7enziU__xOodc3OLWIqoOT0TKA/p.png">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">The Gold Tier</p>
+                        </div>
+                    </div> 
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACvziqXNSKg3PVFz4rBMMBEVWMRksYxzIvApoYV0KPnPx58Eexcg7tsYR73Ww1k7DCrJ6MdjRh5IIJicUS13hBWcO98zgNZbcNbhKnN9yvniYdjuU0DaaQZ8UWmG_fNqMhH8K0DmpZAOkwuYzG2LEVz4hLvAVVlAhYnBOJPzo3Zz9nAOsl0BhrfT7pdx-7GaFYeYJxjC14Lz_8pLEBGfwf0syrkpywbdxDN4e3Uu0HV6VLmvXIzTbdpmVxoFsCoUiulS4Yp5uOwRRX3uBE8RR0o8h75BWutDNmaLqmuRO7Vhn_XJrPTEQSPIXDat1WXEGQM/p.png">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">The Platinum Tier</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACvalW6INykPL513mPktHsuUY5w92nHb3PnGy1WE_bKpGOKU6YG3ftVKczRAHZZhHTlWa1GLlBO-mY06g05xwv-VEp3xiLOOLDwKshWaV2U19xgC-KiriTgvxIXuHHHJp_HP-sdqiykQ2Sk5raq0CpY6HC2qJObi_KOkLx9_EulocDDQKGhwqvpvOpqXjc0ELYZQNFw2KE3SYzSIKB_4Xj_BhtUrgoD65j-DBwfO5TNumd0ufudX6xOp_1DSPlyxgJaxK_BDGczkunw2RxM7rVLOSC2VMQnIPUf1VzyHYODCjRve8-4c5KxnPrWcR9V6T80/p.jpeg">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">Chicken Curry</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACvlnfMne6leA47dF-FTUUi_kII1fNAUeJyWdHmBDEUSCufatJ8OnmsuyJrw5QhUXWyeRPocQTNWcLRbxhR2W9BiNQ8NyHthPXSzU1r1ufbircgi8YXJDRbPlRyzf47curfl-vf6GuDzd6IWp7kA901A3_69XzHCXsd3Pk9oL6dkn97WY1xgbsmg9QqeF2cfK_D_YKM2ECup8kf9HBA1SLQpLJg_0nt7tiFna6UyPD5KDhZXen-S34xttobfDe-LGmEdVfw_cRSyAp8CqKdDPtIN2BqSkXry_zxII_YAm3PWGapiM4mPRItfI_N6bdvLEK0/p.jpeg">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">Granola and Raisin Fruit Bar</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACs-jqyqTfe6h0AMRD5VgOpJPe3qZ-AdWDeUQYzxOCriukNOw22YSnVNaapCi56Z6efVc9Nt1frXSg7fzbrgV5iIZ9O7T0rlY38pPiSQeVBeYKMT7dGKbu2fzX1CMpFSyCfcoT4WCHRZpKzIhSFX5E7sNSvsRMt2VxFI-ZCQuK14ugszRUL6qj7GGl5WumASuYukRVSCL40bCej_l9_5l08Lskub0Awyzx5o9IQyO3CuPCnfXai6uOEQ9GzauLDVsA7ldELWoztwu23hCvSTMTplOsGLDN_Hgfi1YmlV0La7pXp4G-v-qX1BF0A8sa3E_BM/p.png">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">Space-Walking</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACtGz0ogLWgqQahdx8HYwP8I6w6jTnuDP-ryTaERLqBw5DI5-dPu3CGQoizwvvacC_al_QnO6jqQoktUQ1Gfg9gBvrTK3QVqogjlm0G4Ubc3K0vs8LLwrYXAJbZvdBfBO6heQmbdd0Bdn1yZnnDlq42OHauw1B7KyzQXwj7yB1VUawto0zMudgvRMrNYu2CCbSRkpce72t6y4r1mNhOD5h_opE4UlcfCUCCNNrXjtqEx-SOGe3FOG2qooH2CHYeRaIyPaDn1LZzYB1wOD36aDsOy11jNyyG3c4CQSxp9nZAfZ_Ui_xmjbNH78mVNIvgvB-I/p.png">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">Martian Mud Mask Treatment
+</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACsjeFrFNNVMpTj-coiPLzKuWFSFuVASAGLZJdBbUUy24wovIfDLKdX-yiEmh3FBjSTUc5DhQ3NEj6IoHdgmykXCs4dr6Dic-w5SR-SY7Q7bXRTp5lCWfjqJeTIJzE-pIa4bsWXX1sVKIFvW63qHKNQ3-WTcooFGoPidWU5khYMOWcVPtUZlLKFNeMGHwUuji2HOiOEcDGIvIMA_nlqd-5tz6xPtMfMeR9umfONIwy1iw7FeZAMjwGqCs1Sii2-VcIWDhQQvcPbetBrvC3pXfSGENSGY7Ar1FrpH7wcWZtKipzUIO3qkVrEZkjSRvk0Kop4/p.png">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">Sight-Seeing (with tour guide)
+</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACtJvCQ0zgdCxA-vHsfYpfvhedSmt52DC6Zc1SKU-iQVh2oSrFTuaNRuDPv4h3jgbKMeqJ4FM1_9BRRjkAWzRB1z87H1AhYNEBMOwJi1BS39grHZfT0h9rVro5TV3gLp76BXUacy9cvH_lsiSFlusRscuvdX6d6G4OAD9zWytE8U8LyTuU65TNYmfpqi4Elq7FkuVJxXtIaDHiV64Pf6lDIIOzCQM2naNJsiCywwF0-B4Uds_HNPtZC9ZnMdHT8I7TzyS2EDNLTZpK8WMw8QkuujWZNBSOnlx32xGy8e7AmNh9l15tsEdPFmpBL1-yfypP4/p.png">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">Rover Driving
+</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACslLU79PV5APKNP0esy1xWUIUlL4oFgJ63TbrVTsMgcx2TAex-b3KFEEiEtQ_4AJ6wDnme4AxRJjxrt9-RAdDLh3dRtxynWklC1pUYUjxYghWE62Opqd7W-8v8T-kv0jFoYUohuZMZHVFW3S-YNtwpNdMkWG501cnrlo1ofyJCl9TUgBqSZ-XDintNzhTcmR0_299e8wn1Xu7l6eE6fkK6bZm32EaNei8qZ2hO9Cy3o4vBdmWaoc3hM0kh_uColgY4_GbTSY_vr8xcKxI3y7u1SMvW_vSnWoRzmS_uEW448QyWJewGvTcyA-47qqrvT4v8/p.png">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">Sandboarding
+</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACslLU79PV5APKNP0esy1xWUIUlL4oFgJ63TbrVTsMgcx2TAex-b3KFEEiEtQ_4AJ6wDnme4AxRJjxrt9-RAdDLh3dRtxynWklC1pUYUjxYghWE62Opqd7W-8v8T-kv0jFoYUohuZMZHVFW3S-YNtwpNdMkWG501cnrlo1ofyJCl9TUgBqSZ-XDintNzhTcmR0_299e8wn1Xu7l6eE6fkK6bZm32EaNei8qZ2hO9Cy3o4vBdmWaoc3hM0kh_uColgY4_GbTSY_vr8xcKxI3y7u1SMvW_vSnWoRzmS_uEW448QyWJewGvTcyA-47qqrvT4v8/p.png">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">Mercury
+</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACvM0agD7Qt6rwjyM-Tei700qSv8-PmnNFREE7oMFq518Ebcy8I7Rwi51jR_vNzTGCnkb-N5S5Jrm6-4UwJULiN640nbsUKSO4Be57IYduQwlYiOyZ7aYoFNMdN1TF1YhXhxG79xOKlHrueZQvAFa1dk6uYrP8_kOWlEe7GvNInUH3gOFvquGJjzEdFR7ZQtHXZhukaIpSrA7hcWPewMuAhnRGUSr0ES6rKC8MbF-1se82B_YxnqFWY8BPygaVKQ0MKBIJQJDdJN3F3-tjFUjvhw5NtsB5MSYxQQZ6ugpUIT9sim6Tg1lLacYvP7z-E6sxE/p.jpeg">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">Venus
+</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACuSkoWp-Ut9-_WdxfGsyNyiQypre54e2wryy0j32djdJk-IXdUVZbZhbUCuMnQjFjr7fTRODoaWpfH2CH1-Kzb3ENq3qR0zgUBz1kITJ99IyjWk7fUTP8yo_4Zl5Tt3pljN1llw987Mp3FNzPoKDcS9w8Q-OxfyPWJGbfR-WR02YPY6qAd-lqOaDTclz3KD0lWQ2X1D7Vn6YtyysAs_vCNE3wUJb1ZWgoxhDNEis7f7qzDRPAJimzJDfrMrqqgJ3KQBELUb31QmXHiMUDhNaTq3wfNo5VLpfA_BVcDHI5fnurYg3EePXIAE5zfllXcWl9I/p.jpeg">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">Earth
+</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACvSUHKO94P65ApCBiq04QT7-TkyO_BcqQHbbZvo1lKLeD3wsXdWK_PKlx8JNRy-aTM5h2NR7P2O4TddemgdEotJqwBq28w_ukzOQAwrvnCNu7U6OfJwKWFo0pau9y4eVjPYRcNKxqjxvEF5jiLN8W3ZMB5cQ7is2r2Yjcxqn4qG3EQ0o17RtYdajRU_8VZ54QJbW8qC3DIaXece9YAS80p4HJMXiJGbr81KBblVtGWNAQFq526TdRQOJnXq93C4Q6YWqpGDNZ_Y-MZWIDvvOBVv5367_bDforokYUHU8P5F9VdYuAmhboa5e6HQ6c0-Jic/p.jpeg">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">Mars
+</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACvYWTEIyYG2JxCTtw64kByWJW-YjmRVqSCkD5iFVV4Al--hpwCSDsElUU-z0QFK_Zmc9ekiNxL4jASSmSy05INNQ4ZngaH6XU3fq1OdJ9lhGKptqDy0FcKfshAtBM7WLA4KbSL4I2qoUwacPxOpT7-L6wl9qQG-mQwSFwQlOJqXdFBF_DoQrrAaqbUwhys_JfcF8mmCLeJThIvVdifEH6GKTtuby_nKarkP0h_ybA_98XSE_vpwxPRaiNfrsH4zL7TKntfGzpJk6NXYYM24momgK3AzjY7IBeyjXg-EGar8d5SuaKmyu9GrF_vqdH07tVY/p.jpeg">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">Jupiter
+</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACslLU79PV5APKNP0esy1xWUIUlL4oFgJ63TbrVTsMgcx2TAex-b3KFEEiEtQ_4AJ6wDnme4AxRJjxrt9-RAdDLh3dRtxynWklC1pUYUjxYghWE62Opqd7W-8v8T-kv0jFoYUohuZMZHVFW3S-YNtwpNdMkWG501cnrlo1ofyJCl9TUgBqSZ-XDintNzhTcmR0_299e8wn1Xu7l6eE6fkK6bZm32EaNei8qZ2hO9Cy3o4vBdmWaoc3hM0kh_uColgY4_GbTSY_vr8xcKxI3y7u1SMvW_vSnWoRzmS_uEW448QyWJewGvTcyA-47qqrvT4v8/p.png">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">Saturn
+</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACuF6fTiK5FabypZ2ysq7DA6164QIgk8TSVkjNiBGG6llY_MP61FOmCixB3gzHhaH6zzwZ0jgzpBdZJQOHzxhNbxjbN2f4u-7Gf4vaTPMWx_8pgVNGTuK-3UpfmrQbqKih0EL42LL3hwsT2CZnlNcad71ZgBaiuoUAMfDPbThTa3qTIhLOcyXk_fywAj_gukACnhpzjhjN9yAcih9W4-uzTQHKfhGtFeDIrMxFkNqrflfd8owc5KFru1K9Gf607F7Ayj2YBhqPRiZ0HhBe6DrI72pTdYFmajsNSPhoozNM-7ygoA4mb-YtOG81jDtTtCtpM/p.jpeg">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">Uranus
+</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACuPAcHfcOg6N1SLjkhM-k7z8Y4RE_Vds58AJbIQ66Fz1WmRtPmQCQ3PlllnMVWjXF8NH82jPafCAMBmGt0ip--OvakUGRSOfQyze9y0K98H4r87PBaTwgXXS4LoKqB12x9nVoIkK18NnnCK3qWDw2iaMrubLAlNbx5s5ua9m-I0u0DVE-O6eetQWXN9Xe5xhZK-6Xk5C_TFcZQJTdmUFk_N_zqQRwMUoOx2-EP9xjJmlCVEqTyb1LyiHcjwJWmG9odm6WLAsspIVEKb9kNR9ZzeXriHFBdCZc5mnes-Qj9ExdKwZbPStytBiK-QqEZf0-4/p.jpeg">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">Neptune
+</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACubIPd8ZHPIkxTAwqgLg_LZLYPtbIIkQOoR6ah8F-ja4ZQDrV3KE0upeb6rkiXsiBKv2r-nJK6OIT3QTj2Wruemtod8VtmB7vt4WtlNDTFRnucefvF8qZWPuZND4yoG4Ru8u36jSoq8FyOMkmFZ21nWApFzo-PclbMm-B9_UkLUyUMtVZCQJPmTcFtQJysIh14gcCUNZdrtX3_o5Ih4gWke-vce-4DJ9PIUvQFUzC4hQhj2IPbWIv2wp3HcosrNfz14ki048rkDL8nPUggHsoo9lu5EMBwh7kJoxsd8mjwv1nKXz3aqt7aAZy_3nG54cBc/p.png">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">Contact Us Poster
+</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <img src="https://previews.dropbox.com/p/thumb/ACudSIGSg21Kn0HnwNFdOL31En61oZQHeSBuVitKKt04r_BlASPyuXNQ80ODYFhn_KJUxrJ8y2OePAhG5wYaEIqSQBEG8WBFlGKNxWydYe2LTqNkNJpdRXlJZSSGuhbKwAnJ5olcar_4RdX16QyfouyGw_2PaIlLz4127NMotyYXlX-L5CxGu5lQ5AKCHWx3yxUSzlLftWe9z3yJS1E0p4Lva_Ey9sQj2rTwVbLuZnGoJFIVCwJzZfvL3Etpgob4omxJLuThHZGnQTB6f-bWX8Dp1CYSOkYKLRXGf273dMt_vX9QCqGZGfl0reIXjv79hSk/p.png">
+                        <div class="p-4 bg-space-light text-star-medium">
+                            <p class="font-semibold">Promotional Poster
+</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="connect-section" class="content-section py-16 px-6 bg-space-medium rounded-lg shadow-lg my-8">
+            <div class="container mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-8 text-accent-purple">Contact Us</h2>
+                <p class="text-lg text-star-medium mb-6 max-w-3xl mx-auto">
+                    Scan the QR code or visit our website to stay updated on our latest voyages and offers! Alternatively, use the form below to send any inquiries regarding the services we offer.
+                </p>
+                <div class="flex flex-col items-center justify-center space-y-6 max-w-xl mx-auto"> 
+                               <style>
+    /* CSS Variables for Theme - Mirroring the main website's palette */
+    :root {
+        /* Dark Mode Defaults */
+        --bg-dark: #1a082b;
+        --bg-medium: #2d1a42;
+        --bg-light: #402c58;
+        --text-light: #f0f0f0;
+        --text-medium: #d0d0d0;
+        --accent-purple: #bb86fc;
+        --accent-blue: #82aaff;
+        --border-color: rgba(109, 40, 217, 0.5);
+        --shadow-color: rgba(139, 92, 246, 0.3);
+        --button-primary-bg: #bb86fc;
+        --button-primary-text: #ffffff;
+        --input-bg: rgba(64, 44, 88, 0.7); /* Slightly lighter than bg-medium for inputs */
+        --input-border: rgba(109, 40, 217, 0.5);
+        --input-text: #f0f0f0;
+        --form-container-bg: rgba(45, 26, 66, 0.9); /* Opaque bg-medium for form */
+        --form-text: #f0f0f0;
+        --message-success-bg: rgba(21, 128, 61, 0.5);
+        --message-success-text: #86EFAC;
+        --message-error-bg: rgba(153, 27, 27, 0.5);
+        --message-error-text: #F87171;
+    }
+    /* Light Mode Overrides */
+    body.light-mode { /* Assumes the embedding document's body can have this class */
+        --bg-dark: #fbfbfb; /* Main background */
+        --bg-medium: #f2f2f2; /* Form container background */
+        --bg-light: #e6e6e6; /* Input background */
+        --text-light: #1a082b; /* Dark text for contrast */
+        --text-medium: #2d1a42;
+        --accent-purple: #6c42a2;
+        --accent-blue: #3d7ee0;
+        --border-color: rgba(90, 130, 200, 0.5);
+        --shadow-color: rgba(90, 130, 200, 0.3);
+        --button-primary-bg: #82aaff;
+        --button-primary-text: #1a082b;
+        --input-bg: rgba(230, 230, 230, 0.7);
+        --input-border: rgba(90, 130, 200, 0.5);
+        --input-text: #1a082b;
+        --form-container-bg: rgba(242, 242, 242, 0.9);
+        --form-text: #1a082b;
+        --message-success-bg: rgba(200, 250, 200, 0.8);
+        --message-success-text: #28a745;
+        --message-error-bg: rgba(153, 27, 27, 0.5);
+        --message-error-text: #F87171;
+    }
+    /* General Body Styles (adjust if embedding in a non-body context) */
+    /* These styles might need to be adjusted based on where you embed this snippet. */
+    /* For direct embedding into a <div>, you might apply these to the .form-container */
+    .contact-form-wrapper { /* New wrapper class for the embeddable content */
+        font-family: 'DM Sans', sans-serif;
+        /* Removed background-color to make it transparent */
+        color: var(--text-light);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh; /* Adjust if you don't want it to take full viewport height */
+        padding: 2rem;
+        overflow-x: hidden;
+        box-sizing: border-box; /* Ensure padding is included in element's total width and height */
+    }
+    /* Form Container Styling */
+    .form-container {
+        background-color: var(--form-container-bg);
+        backdrop-filter: blur(5px);
+        border: 1px solid var(--border-color);
+        box-shadow: 0 0 20px var(--shadow-color);
+        color: var(--form-text);
+        padding: 2.5rem;
+        border-radius: 1.5rem;
+        max-width: 700px; /* Changed from 600px to 700px */
+        width: 100%;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        box-sizing: border-box;
+    }
+    /* Input and Textarea Styling */
+    .form-input, .form-textarea {
+        background-color: var(--input-bg);
+        border: 1px solid var(--input-border);
+        color: var(--input-text);
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        width: 100%;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .form-input:focus, .form-textarea:focus {
+        outline: none;
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 0 3px rgba(130, 170, 255, 0.5);
+    }
+    .form-input::placeholder, .form-textarea::placeholder {
+        color: var(--text-medium);
+        opacity: 0.7;
+    }
+    /* Button Styling */
+    .submit-button {
+        background-color: var(--button-primary-bg);
+        color: var(--button-primary-text);
+        font-weight: bold;
+        padding: 0.75rem 2rem;
+        border-radius: 9999px; /* Full rounded */
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .submit-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px var(--shadow-color);
+        opacity: 0.9;
+    }
+    .submit-button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    /* Message Box Styling */
+    .message-box {
+        padding: 1rem;
+        border-radius: 0.75rem;
+        margin-top: 1.5rem;
+        font-weight: 500;
+        text-align: center;
+        display: none; /* Hidden by default, shown by JS */
+    }
+    .message-box.success {
+        background-color: var(--message-success-bg);
+        color: var(--message-success-text);
+        border: 1px solid var(--success-border);
+    }
+    .message-box.error {
+        background-color: var(--message-error-bg);
+        color: var(--message-error-text);
+        border: 1px solid var(--error-border);
+    }
+</style>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<div class="contact-form-wrapper">
+    <div class="form-container">
+        <h1 class="text-3xl md:text-4xl font-bold text-center mb-8 text-accent-purple">Contact Us</h1>
+        <p class="text-center text-lg mb-8 text-text-medium">We'd love to hear from you! Send us a message.</p>
+        <form id="contactForm" class="space-y-6">
+            <div>
+                <label for="name" class="block text-lg font-medium mb-2 text-form-text">Your Name</label>
+                <input type="text" id="name" name="from_name" class="form-input" placeholder="Forename Surname" required>
+            </div>
+            <div>
+                <label for="email" class="block text-lg font-medium mb-2 text-form-text">Your Email</label>
+                <input type="email" id="email" name="from_email" class="form-input" placeholder="name@email.com" required>
+            </div>
+            <div>
+                <label for="subject" class="block text-lg font-medium mb-2 text-form-text">Subject</label>
+                <input type="text" id="subject" name="subject" class="form-input" placeholder="Inquiry about voyages" required>
+            </div>
+            <div>
+                <label for="message" class="block text-lg font-medium mb-2 text-form-text">Your Message</label>
+                <textarea id="message" name="message" rows="6" class="form-textarea" placeholder="Type your message here..." required></textarea>
+            </div>
+            <div class="flex justify-center">
+                <button type="submit" class="submit-button">Send Message</button>
+            </div>
+        </form>
+        <div id="messageBox" class="message-box"></div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const contactForm = document.getElementById('contactForm');
+        const messageBox = document.getElementById('messageBox');
+        // Initialize EmailJS with your Public Key        // Initialize EmailJS with your Public Key
+        // IMPORTANT: Replace 'YOUR_PUBLIC_KEY' with your actual EmailJS Public Key        // IMPORTANT: Replace 'YOUR_PUBLIC_KEY' with your actual EmailJS Public Key
+        (function() {
+            emailjs.init("h4n6S2RHz_TFSZf8K");
+        })();
+        // --- Form Submission Logic ---
+        if (contactForm) {
+            contactForm.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Prevent default form submission
+                // Clear previous messages
+                messageBox.textContent = '';
+                messageBox.classList.remove('success', 'error');
+                messageBox.style.display = 'none';
+                // IMPORTANT: Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID'
+                // These come from your EmailJS dashboard setup.
+                const serviceID = 'service_91znt2n';
+                const templateID = 'template_rglc9rw';
+                try {
+                    // Send the form using EmailJS
+                    const response = await emailjs.sendForm(serviceID, templateID, contactForm);
+                    console.log('EmailJS Success:', response);
+                    messageBox.classList.add('success');
+                    messageBox.textContent = 'Thank you for your message! We will get back to you soon.';
+                    contactForm.reset(); // Clear form fields on success
+                } catch (error) {
+                    console.error('EmailJS Error:', error);
+                    messageBox.classList.add('error');
+                    messageBox.textContent = `Failed to send message: ${error.text || error}. Please try again.`;
+                } finally {
+                    messageBox.style.display = 'block'; // Show the message box
+                }
+            });
+        } else {
+            console.error("Contact form element not found. Form submission logic will not work.");
+        }
+    });
+</script>
+                    <img src="https://previews.dropbox.com/p/thumb/ACtXPIU6IbbiQPLOONTq3vKEJm-CpRSQV9naARq16rBRr93eqH5g7c8sqQ_co3OjEqe1ou7Og203qLI5Pvc-qjTJBMPfP6doK9_nuWHoQbkrEUF97LAUn1XgLMx0uYx4Gw1RmBvrHgZqN6gsa7-c9MTiptlt6aoMe4SO0CMJ9udePV_Ic4QBRfScpyzAN57NiMlecxdVtrr7dOfL7GeCZpOqJMFzEpRk5_AMwD9Y3NI4VDgjhjEagDcFZqnP0w5HZpsPULCWkTvHs2mJDqWw1z1r-FWqaZQvydJUL6nzLLAa_DaZsxLL6ZWBNy2dT6qcvXVV_jDMLfv9vrducufsWgFJ/p.png" alt="Connect with Us QR Code" class="max-w-md md:max-w-lg rounded-lg shadow-xl border-4 border-accent-blue" onerror="this.onerror=null;this.src='https://placehold.co/250x250/2d1a42/f0f0f0?text=QR+Code+Not+Found';">
+                    <div class="flex flex-col space-y-2 text-star-medium text-lg">
+                        <a href="https://bit.ly/geminivoyages" target="_blank" rel="noopener noreferrer" class="hover:text-accent-purple transition-colors duration-200">https://bit.ly/geminivoyages</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="mercury-section" class="content-section py-16 px-6 bg-space-medium rounded-lg shadow-lg my-8">
+            <div class="container mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-8 text-accent-blue">Destination: Mercury</h2>
+                                <img src="https://images-assets.nasa.gov/image/PIA11406/PIA11406~orig.jpg?w=720&h=486&fit=clip&crop=faces%2Cfocalpoint" alt="Mercury" class="mx-auto mt-8 rounded-lg shadow-md mb-8" onerror="this.onerror=null;this.src='https://placehold.co/400x300/2d1a42/f0f0f0?text=Image+Not+Found';">
+                <div class="text-star-medium text-lg max-w-3xl mx-auto text-left space-y-4">
+                    <p>
+                        Mercury is the smallest planet and the closest to the Sun. It gets super hot during the day because it's so close to the Sun, and super cold at night. This is because it doesn't have much air to hold onto the heat.
+                    </p>
+                    <p>
+                        Its surface is covered in many craters, just like our Moon, formed by rocks hitting it a long time ago. There are also flat areas that might be from old volcanoes. Scientists have even found ice in dark, shadowy spots near its top and bottom!
+                    </p>
+                    <p>
+                        Mercury spins slowly but goes around the Sun quite fast. A day on Mercury is actually longer than its year! It has a weak magnetic field because of its hot, melted center.
+                    </p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Diameter:</strong> 4,879 km (approx. 0.38 Earths)</li>
+                        <li><strong>Distance from Sun:</strong> 57.9 million km (0.39 AU)</li>
+                        <li><strong>Rotation Period (Solar Day):</strong> 176 Earth days</li>
+                        <li><strong>Orbital Period (Year Length):</strong> 88 Earth days</li>
+                        <li><strong>Surface Gravity:</strong> 0.38 g (38% of Earth's)</li>
+                        <li><strong>Atmosphere:</strong> Exosphere of atoms (primarily oxygen, sodium, hydrogen, helium, potassium)</li>
+                    </ul>
+                    <p>
+                        Visiting Mercury helps us learn how rocky planets form and change, especially when they're so close to a star. It's amazing to see how different planets can be!
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section id="venus-section" class="content-section py-16 px-6 bg-space-medium rounded-lg shadow-lg my-8">
+            <div class="container mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-8 text-accent-blue">Destination: Venus</h2>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Venus_globe.jpg/2048px-Venus_globe.jpg" alt="Venus" class="mx-auto mt-8 rounded-lg shadow-md mb-8" onerror="this.onerror=null;this.src='https://placehold.co/400x300/2d1a42/f0f0f0?text=Image+Not+Found';">
+                <div class="text-star-medium text-lg max-w-3xl mx-auto text-left space-y-4">
+                    <p>
+                        Venus is often called Earth's "sister planet" because it's about the same size. But it's a very harsh place! It's covered in thick clouds of sulphuric acid and has air mostly made of carbon dioxide.
+                    </p>
+                    <p>
+                        These thick clouds trap heat, making Venus the hottest planet in our solar system, even hotter than Mercury! It's so hot that metals like lead would melt. The air pressure on Venus is also super high, like being deep in the ocean. This makes it very hard for spacecraft to land there.
+                    </p>
+                    <p>
+                        Venus spins very slowly and backwards compared to most planets. A day on Venus is longer than its year! Its surface has lots of old volcanoes and flat areas, showing it used to be very active.
+                    </p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Diameter:</strong> 12,104 km (approx. 0.95 Earths)</li>
+                        <li><strong>Distance from Sun:</strong> 108.2 million km (0.72 AU)</li>
+                        <li><strong>Rotation Period (Solar Day):</strong> 116.75 Earth days (retrograde)</li>
+                        <li><strong>Orbital Period (Year Length):</strong> 225 Earth days</li>
+                        <li><strong>Surface Gravity:</strong> 0.91 g (91% of Earth's)</li>
+                        <li><strong>Atmosphere:</strong> Primarily Carbon Dioxide (96.5%), Sulphuric Acid Clouds</li>
+                    </ul>
+                    <p>
+                        A trip to Venus helps us understand how a planet's climate can go wrong and why Earth is so special for life.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section id="earth-section" class="content-section py-16 px-6 bg-space-medium rounded-lg shadow-lg my-8">
+            <div class="container mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-8 text-accent-blue">Destination: Earth</h2>
+                <img src="https://images.pexels.com/photos/87651/earth-blue-planet-globe-planet-87651.jpeg" alt="Earth" class="mx-auto mt-8 rounded-lg shadow-md mb-8" onerror="this.onerror=null;this.src='https://placehold.co/400x300/2d1a42/f0f0f0?text=Image+Not+Found';">
+                <div class="text-star-medium text-lg max-w-3xl mx-auto text-left space-y-4">
+                    <p>
+                        Our home, Earth, is a beautiful blue planet full of life! It has huge oceans, big landmasses, and air that helps us breathe. Earth is the only known planet with lots of liquid water on its surface, which is super important for life.
+                    </p>
+                    <p>
+                        Earth's air is mostly nitrogen and oxygen. This air acts like a shield, protecting us from harmful rays from the Sun. It also helps keep our planet at a nice temperature. Earth also has a strong magnetic field that protects us from solar winds.
+                    </p>
+                    <p>
+                        Earth's surface is always changing with mountains forming, volcanoes erupting, and oceans moving. It has many different places, from hot deserts to cold ice caps, all with different plants and animals. We have one Moon that goes around Earth, which helps with the ocean tides.
+                    </p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Diameter:</strong> 12,756 km</li>
+                        <li><strong>Distance from Sun:</strong> 149.6 million km (1 AU)</li>
+                        <li><strong>Rotation Period (Day Length):</strong> 24 hours</li>
+                        <li><strong>Orbital Period (Year Length):</strong> 365.25 days</li>
+                        <li><strong>Surface Gravity:</strong> 1 g</li>
+                        <li><strong>Atmosphere:</strong> Nitrogen (78%), Oxygen (21%), Argon, Carbon Dioxide, trace gases</li>
+                        <li><strong>Moons:</strong> 1 (The Moon)</li>
+                    </ul>
+                    <p>
+                        Looking at Earth from space helps us see how special and fragile our home is. It's a reminder to take care of our unique planet.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section id="mars-section" class="content-section py-16 px-6 bg-space-medium rounded-lg shadow-lg my-8">
+            <div class="container mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-8 text-accent-blue">Destination: Mars</h2>
+                <img src="https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2007/02/true-colour_image_of_mars_seen_by_osiris/9969705-2-eng-GB/True-colour_image_of_Mars_seen_by_OSIRIS_article.jpg" alt="Mars" class="mx-auto mt-8 rounded-lg shadow-md mb-8" onerror="this.onerror=null;this.src='https://placehold.co/400x300/2d1a42/f0f0f0?text=Image+Not+Found';">
+                <div class="text-star-medium text-lg max-w-3xl mx-auto text-left space-y-4">
+                    <p>
+                        Mars is called the "Red Planet" because of the rusty iron on its surface. Many people wonder if we could live there one day! It has features like Earth, such as ice caps (made of water ice and frozen carbon dioxide), huge canyons, and old riverbeds. This tells us water was once on Mars.
+                    </p>
+                    <p>
+                        Mars has the biggest volcano in our solar system, Olympus Mons, which is three times taller than Mount Everest! It also has a giant canyon called Valles Marineris, which is super long. The air on Mars is very thin and mostly carbon dioxide, so water can't stay liquid on the surface for long. But it does have dust storms!
+                    </p>
+                    <p>
+                        Robots like Curiosity and Perseverance have explored Mars, looking for signs of past life and checking if humans could live there. They've found signs of old water and even some basic building blocks of life, which is very exciting!
+                    </p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Diameter:</strong> 6,779 km (approx. 0.53 Earths)</li>
+                        <li><strong>Distance from Sun:</strong> 227.9 million km (1.52 AU)</li>
+                        <li><strong>Rotation Period (Day Length):</strong> 24.6 hours (a "sol")</li>
+                        <li><strong>Orbital Period (Year Length):</strong> 687 Earth days (1.88 Earth years)</li>
+                        <li><strong>Surface Gravity:</strong> 0.38 g (38% of Earth's)</li>
+                        <li><strong>Atmosphere:</strong> Primarily Carbon Dioxide (95.3%), Nitrogen (2.7%)</li>
+                        <li><strong>Moons:</strong> 2 (Phobos, Deimos - likely captured asteroids)</li>
+                    </ul>
+                    <p>
+                        Our trips to Mars let you see its rocky, alien beauty up close. It's part of humanity's big search to understand space and maybe even live on another planet!
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section id="jupiter-section" class="content-section py-16 px-6 bg-space-medium rounded-lg shadow-lg my-8">
+            <div class="container mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-8 text-accent-blue">Destination: Jupiter</h2>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Jupiter.jpg/500px-Jupiter.jpg" alt="Jupiter" class="mx-auto mt-8 rounded-lg shadow-md mb-8" onerror="this.onerror=null;this.src='https://placehold.co/400x300/2d1a42/f0f0f0?text=Image+Not+Found';">
+                <div class="text-star-medium text-lg max-w-3xl mx-auto text-left space-y-4">
+                    <p>
+                        Jupiter is the biggest planet in our solar system – it's a giant ball of gas! Its swirling, colourful clouds are made mostly of hydrogen and helium. These clouds form stripes and spots because of super-fast winds.
+                    </p>
+                    <p>
+                        Jupiter's most famous feature is the Great Red Spot, a huge storm bigger than Earth that has been raging for hundreds of years! Deep inside, Jupiter might have a small, rocky core, surrounded by layers of special hydrogen. It spins very fast, making its days less than 10 hours long.
+                    </p>
+                    <p>
+                        Jupiter acts like a giant protector for the inner planets, pulling in comets and asteroids with its strong gravity. It has a faint ring system and at least 95 moons! Four of its biggest moons are Io, Europa, Ganymede, and Callisto. Io has lots of volcanoes; Europa might have an ocean under its ice; Ganymede is bigger than Mercury and has its own magnetic field; and Callisto is a very old, cratered moon.
+                    </p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Diameter:</strong> 139,822 km (approx. 11 Earths)</li>
+                        <li><strong>Distance from Sun:</strong> 778.5 million km (5.2 AU)</li>
+                        <li><strong>Rotation Period (Day Length):</strong> 9.9 hours</li>
+                        <li><strong>Orbital Period (Year Length):</strong> 11.86 Earth years</li>
+                        <li><strong>Surface Gravity (Cloud Tops):</strong> 2.53 g (253% of Earth's)</li>
+                        <li><strong>Atmosphere:</strong> Hydrogen (~90%), Helium (~10%)</li>
+                        <li><strong>Known Moons:</strong> 95+</li>
+                    </ul>
+                    <p>
+                        A trip to Jupiter promises awe-inspiring views of its vibrant cloud bands, an encounter with its legendary storms, and a deeper understanding of gas giant dynamics and the potential for diverse worlds within a single planetary system. It is a testament to the immense and powerful forces at play in our cosmic neighbourhood.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section id="saturn-section" class="content-section py-16 px-6 bg-space-medium rounded-lg shadow-lg my-8">
+            <div class="container mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-8 text-accent-blue">Destination: Saturn</h2>
+                <img src="https://assets.science.nasa.gov/dynamicimage/assets/science/psd/solar/2023/06/pia21046.jpg?w=2012&h=1024&fit=clip&crop=faces%2Cfocalpoint" alt="Saturn" class="mx-auto mt-8 rounded-lg shadow-md mb-8" onerror="this.onerror=null;this.src='https://placehold.co/400x300/2d1a42/f0f0f0?text=Image+Not+Found';">
+                <div class="text-star-medium text-lg max-w-3xl mx-auto text-left space-y-4">
+                    <p>
+                        Saturn is famous for its beautiful, icy rings! These rings aren't solid; they're made of billions of tiny pieces of ice and rock, all orbiting Saturn. They look amazing from far away.
+                    </p>
+                    <p>
+                        Saturn is the second-largest gas giant, also made mostly of hydrogen and helium. It's so light that it would float in a giant bathtub if you could find one big enough! Its clouds are less stormy than Jupiter's, but it has a strange hexagon-shaped storm at its north pole.
+                    </p>
+                    <p>
+                        Saturn has a huge family of at least 146 moons! Its biggest moon, Titan, is super interesting. It's bigger than Mercury and has its own thick air, with clouds, rain, rivers, and even lakes made of liquid methane! Another cool moon is Enceladus, which shoots out water vapour and ice from its south pole, meaning it might have an ocean under its surface.
+                    </p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Diameter:</strong> 116,460 km (approx. 9.1 Earths)</li>
+                        <li><strong>Distance from Sun:</strong> 1.4 billion km (9.5 AU)</li>
+                        <li><strong>Rotation Period (Day Length):</strong> 10.7 hours</li>
+                        <li><strong>Orbital Period (Year Length):</strong> 29.45 Earth years</li>
+                        <li><strong>Surface Gravity:</strong> 1.07 g (107% of Earth's)</li>
+                        <li><strong>Atmosphere:</strong> Hydrogen (~96%), Helium (~3%)</li>
+                        <li><strong>Known Moons:</strong> 146+ (including Titan and Enceladus)</li>
+                    </ul>
+                    <p>
+                        Witnessing Saturn's majestic rings up close and exploring its diverse moon system is a truly unforgettable experience, a testament to the wonders of the cosmos and the incredible variety of worlds within our own solar system.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section id="uranus-section" class="content-section py-16 px-6 bg-space-medium rounded-lg shadow-lg my-8">
+            <div class="container mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-8 text-accent-blue">Destination: Uranus</h2>
+                <img src="https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e000100/GSFC_20171208_Archive_e000100~orig.jpg?w=1280&h=1083&fit=clip&crop=faces%2Cfocalpoint" alt="Uranus" class="mx-auto mt-8 rounded-lg shadow-md mb-8" onerror="this.onerror=null;this.src='https://placehold.co/400x300/2d1a42/f0f0f0?text=Image+Not+Found';">
+                <div class="text-star-medium text-lg max-w-3xl mx-auto text-left space-y-4">
+                    <p>
+                        Uranus is a strange ice giant because it spins on its side! This means it rolls around the Sun like a ball, giving it very long, unusual seasons where one pole gets sunlight for decades and then darkness for decades.
+                    </p>
+                    <p>
+                        Its air is made of methane (which makes it look blue-green), hydrogen, and helium. Uranus doesn't have a solid surface; instead, it gets denser and hotter as you go deeper, turning into a thick, icy liquid. Its magnetic field is also very odd, tilted and off-center.
+                    </p>
+                    <p>
+                        Uranus has faint, dark rings and 27 known moons. Its moons, like Titania and Miranda, have unique surfaces, from old craters to broken-up terrains.
+                    </p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Diameter:</strong> 50,724 km (approx. 4 Earths)</li>
+                        <li><strong>Distance from Sun:</strong> 2.9 billion km (19.8 AU)</li>
+                        <li><strong>Rotation Period (Day Length):</strong> 17.2 hours (retrograde rotation)</li>
+                        <li><strong>Orbital Period (Year Length):</strong> 84 Earth years</li>
+                        <li><strong>Surface Gravity:</strong> 0.89 g (89% of Earth's)</li>
+                        <li><strong>Atmosphere:</strong> Hydrogen (~82.5%), Helium (~15.2%), Methane (~2.3%)</li>
+                        <li><strong>Known Moons:</strong> 27</li>
+                    </ul>
+                    <p>
+                        A journey to Uranus is an encounter with one of the solar system's most enigmatic and beautifully understated ice giants, offering profound insights into the formation and evolution of planets in the outer reaches of a star system.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section id="neptune-section" class="content-section py-16 px-6 bg-space-medium rounded-lg shadow-lg my-8">
+            <div class="container mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-8 text-accent-blue">Destination: Neptune</h2>
+                <img src="https://assets.science.nasa.gov/dynamicimage/assets/science/psd/solar/2023/09/p/i/a/0/PIA01492-1.jpg?w=2188&h=2185&fit=clip&crop=faces%2Cfocalpoint" alt="Neptune" class="mx-auto mt-8 rounded-lg shadow-md mb-8" onerror="this.onerror=null;this.src='https://placehold.co/400x300/2d1a42/f0f0f0?text=Image+Not+Found';">
+                <div class="text-star-medium text-lg max-w-3xl mx-auto text-left space-y-4">
+                    <p>
+                        Neptune is the farthest major planet from the Sun and looks deep blue because of methane in its air. It's known for having the fastest, super-strong winds in our solar system!
+                    </p>
+                    <p>
+                        Even though it's far away, Neptune is very active. It has huge dark spots, which are giant storms that appear and disappear quickly. Like Uranus, it's an ice giant with a thick, icy liquid inside.
+                    </p>
+                    <p>
+                        Neptune possesses faint rings and 14 known moons. Its largest moon, Triton, is very special. It orbits Neptune backwards and is one of the coldest places in the solar system. But even there, it has active "ice volcanoes" that shoot out nitrogen ice and dust, meaning it might have a warm inside!
+                    </p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Diameter:</strong> 49,244 km (approx. 3.8 Earths)</li>
+                        <li><strong>Distance from Sun:</strong> 4.5 billion km (30.1 AU)</li>
+                        <li><strong>Rotation Period (Day Length):</strong> 16.1 hours</li>
+                        <li><strong>Orbital Period (Year Length):</strong> 164.8 Earth years</li>
+                        <li><strong>Surface Gravity:</strong> 1.14 g (114% of Earth's)</li>
+                        <li><strong>Atmosphere:</strong> Hydrogen (~80%), Helium (~19%), Methane (~1.5%)</li>
+                        <li><strong>Known Moons:</strong> 14 (including Triton)</li>
+                    </ul>
+                    <p>
+                        Venturing to Neptune is an exploration of the distant, turbulent frontiers of our solar system, a testament to the enduring power and beauty of the universe, and the surprising activity that can exist even in the furthest reaches.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section id="quiz-page-section" class="content-section py-8 px-6 my-8 flex justify-center items-center">
+            <div class="quiz-page-container w-full">
+                <h1 class="text-4xl md:text-5xl font-bold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 drop-shadow-lg animate-pulse">
+                    Planet Trivia Quiz!
+                </h1>
+                <div id="quiz-container" class="space-y-6 w-full max-w-xl mx-auto">
+                </div>
+                <div class="flex justify-center mt-8">
+                    <button id="submit-quiz-btn" class="submit-button">
+                        Submit Quiz
+                    </button>
+                </div>
+                <div id="results-container" class="mt-10 p-6 bg-purple-900 bg-opacity-70 rounded-2xl shadow-xl hidden border border-purple-700 w-full max-w-xl mx-auto">
+                    <h2 class="text-3xl font-semibold text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-cyan-300">
+                        Your Results
+                    </h2>
+                    <p id="score-display" class="text-xl text-center mb-6 text-gray-200">
+                        You scored: <span class="font-bold text-yellow-300"></span>
+                    </p>
+                    <div id="feedback-details" class="space-y-4">
+                    </div>
+                    <div class="flex justify-center mt-6">
+                        <button id="retake-quiz-btn" class="submit-button">
+                            Retake Quiz
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="text-star-medium py-10 px-6 rounded-t-lg mt-8" style="background-color: var(--footer-bg);">
+        <div class="container mx-auto text-center">
+            <p class="text-lg mb-4">&copy; 2025 Gemini Voyages. All rights reserved.</p>
+            <br>
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener noreferrer" class="hover:text-accent-purple transition-colors duration-200">This website is licensed under CC BY-NC-ND.</a>
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode.en" target="_blank" rel="noopener noreferrer" class="hover:text-accent-purple transition-colors duration-200">View the full legal code here.</a>
+        </div>
+    </footer>
+    <div id="actionModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 class="text-2xl font-bold mb-4 text-star-light" id="modalTitle"></h3>
+            <p class="text-star-medium mb-6" id="modalMessage"></p>
+            <button id="modalProceedBtn" class="bg-accent-purple hover:bg-opacity-90 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 ease-in-out button-glow transform active:scale-95">
+                Proceed
+            </button>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get all interactive elements
+            const aboutUsBtn = document.getElementById('aboutUsBtn');
+            const learnMoreBtn = document.getElementById('learnMoreBtn');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const allContentSections = document.querySelectorAll('.content-section');
+            // Main site general modal elements
+            const actionModal = document.getElementById('actionModal');
+            const modalProceedBtn = document.getElementById('modalProceedBtn');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            // Quiz elements
+            const quizAnnouncementBanner = document.getElementById('quizAnnouncementBanner');
+            const openQuizBtn = document.getElementById('openQuizBtn');
+            const quizPageSection = document.getElementById('quiz-page-section');
+            const quizContainer = quizPageSection.querySelector('#quiz-container');
+            const submitQuizButton = quizPageSection.querySelector('#submit-quiz-btn');
+            const resultsContainer = quizPageSection.querySelector('#results-container');
+            const scoreDisplay = resultsContainer.querySelector('#score-display span');
+            const feedbackDetails = resultsContainer.querySelector('#feedback-details');
+            const retakeQuizButton = resultsContainer.querySelector('#retake-quiz-btn');
+            // Special elements for the "Planets" dropdown
+            const planetsDropdownToggle = document.getElementById('planetsDropdownToggle');
+            const planetsDropdownContainer = planetsDropdownToggle.closest('.dropdown');
+            const dropdownArrow = planetsDropdownToggle.querySelector('.dropdown-arrow');
+            const dropdownContent = planetsDropdownContainer.querySelector('.dropdown-content');
+            // Theme Toggle elements
+            const themeToggleBtn = document.getElementById('themeToggleBtn');
+            const moonIcon = document.getElementById('moonIcon');
+            const sunIcon = document.getElementById('sunIcon');
+            // Audio element
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            // Variable to track which button opened the modal
+            let modalSourceButton = null;
+            // Quiz Questions Data
+            const quizQuestions = [
+                {
+                    question: "1. Which planet is known as the 'Red Planet'?",
+                    options: ["a) Venus", "b) Mars", "c) Jupiter", "d) Saturn"],
+                    answer: "b) Mars"
+                },
+                {
+                    question: "2. What is the largest planet in our solar system?",
+                    options: ["a) Earth", "b) Neptune", "c) Jupiter", "d) Uranus"],
+                    answer: "c) Jupiter"
+                },
+                {
+                    question: "3. Which planet is closest to the Sun?",
+                    options: ["a) Earth", "b) Venus", "c) Mercury", "d) Mars"],
+                    answer: "c) Mercury"
+                },
+                {
+                    question: "4. Which planet is famous for its prominent ring system?",
+                    options: ["a) Jupiter", "b) Uranus", "c) Neptune", "d) Saturn"],
+                    answer: "d) Saturn"
+                },
+                {
+                    question: "5. How many moons does Earth have?",
+                    options: ["a) Zero", "b) One", "c) Two", "d) Five"],
+                    answer: "b) One"
+                },
+                {
+                    question: "6. Which planet is known as Earth's 'sister planet' due to its similar size and composition?",
+                    options: ["a) Mars", "b) Venus", "c) Mercury", "d) Jupiter"],
+                    answer: "b) Venus"
+                },
+                {
+                    question: "7. What is the coldest planet in our solar system?",
+                    options: ["a) Mars", "b) Uranus", "c) Neptune", "d) Pluto (though no longer classified as a planet, it's often associated with this title)"],
+                    answer: "c) Neptune"
+                },
+                {
+                    question: "8. Which planet has the 'Great Red Spot,' a giant storm larger than Earth?",
+                    options: ["a) Mars", "b) Saturn", "c) Jupiter", "d) Neptune"],
+                    answer: "c) Jupiter"
+                },
+                {
+                    question: "9. Which is the only planet in our solar system not named after a god or goddess?",
+                    options: ["a) Mars", "b) Earth", "c) Venus", "d) Jupiter"],
+                    answer: "b) Earth"
+                },
+                {
+                    question: "10. Which planet rotates on its side, almost at a 90-degree angle to its orbit?",
+                    options: ["a) Mars", "b) Saturn", "c) Uranus", "d) Neptune"],
+                    answer: "c) Uranus"
+                },
+                {
+                    question: "11. Which planet is known for having the most extreme temperature swings between day and night?",
+                    options: ["a) Venus", "b) Mars", "c) Mercury", "d) Earth"],
+                    answer: "c) Mercury"
+                },
+                {
+                    question: "12. What is the most volcanically active body in our solar system (besides the Sun)?",
+                    options: ["a) Earth", "b) Mars", "c) Io (moon of Jupiter)", "d) Venus"],
+                    answer: "c) Io (moon of Jupiter)"
+                },
+                {
+                    question: "13. Which gas makes up the majority of Jupiter's atmosphere?",
+                    options: ["a) Oxygen", "b) Nitrogen", "c) Hydrogen", "d) Carbon Dioxide"],
+                    answer: "c) Hydrogen"
+                },
+                {
+                    question: "14. Which planet has a day that is longer than its year?",
+                    options: ["a) Earth", "b) Mars", "c) Venus", "d) Mercury"],
+                    answer: "c) Venus"
+                },
+                {
+                    question: "15. Besides Earth, which planet is considered the most likely to harbour life due to the potential presence of liquid water?",
+                    options: ["a) Venus", "b) Jupiter", "c) Mars", "d) Saturn"],
+                    answer: "c) Mars"
+                },
+                {
+                    question: "16. Which of the following is an inner, rocky planet?",
+                    options: ["a) Jupiter", "b) Saturn", "c) Neptune", "d) Mars"],
+                    answer: "d) Mars"
+                },
+                {
+                    question: "17. Which planet has the most extensive system of rings, composed of countless ice particles?",
+                    options: ["a) Jupiter", "b) Uranus", "c) Saturn", "d) Neptune"],
+                    answer: "c) Saturn"
+                },
+                {
+                    question: "18. What phenomenon causes Venus to be the hottest planet, despite not being the closest to the Sun?",
+                    options: ["a) Its rapid rotation", "b) Its strong magnetic field", "c) A runaway greenhouse effect", "d) Its proximity to a black hole"],
+                    answer: "c) A runaway greenhouse effect"
+                },
+                {
+                    question: "19. Which of these planets is an ice giant?",
+                    options: ["a) Jupiter", "b) Saturn", "c) Uranus", "d) Mars"],
+                    answer: "c) Uranus"
+                },
+                {
+                    question: "20. What is the name of the largest moon of Saturn, known for having a dense atmosphere and lakes of liquid methane?",
+                    options: ["a) Europa", "b) Ganymede", "c) Titan", "d) Triton"],
+                    answer: "c) Titan"
+                }
+            ];
+            // Function to show the general action modal
+            const showActionModal = (title, message, sourceButtonId = null) => {
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+                actionModal.style.display = 'flex'; // Make sure it's flex for centering
+                modalSourceButton = sourceButtonId; // Store which button opened the modal
+            };
+            // Function to hide the general action modal
+            const hideActionModal = () => {
+                actionModal.style.display = 'none'; // Hide it
+                // After modal hides, check if it was opened by learnMoreBtn to render quiz
+                if (modalSourceButton === 'learnMoreBtn') {
+                    renderQuiz();
+                }
+                modalSourceButton = null; // Reset the source button
+            };
+            // Function to dynamically update header positions and body padding
+            const updateHeaderPositions = () => {
+                const banner = document.getElementById('quizAnnouncementBanner');
+                const navElement = document.querySelector('nav');
+                if (!banner || !navElement) {
+                    console.error("Banner or Navigation element not found. Cannot update header positions.");
+                    return;
+                }
+                requestAnimationFrame(() => {
+                    const bannerHeight = banner.offsetHeight;
+                    const navHeight = navElement.offsetHeight;
+                    // The marquee is now within the main content flow, not part of the fixed header height calculation
+                    const totalHeaderHeight = bannerHeight + navHeight;
+                    navElement.style.top = `${bannerHeight}px`;
+                    // Use scroll-padding-top for smooth and accurate scrolling to anchored sections
+                    document.documentElement.style.scrollPaddingTop = `${totalHeaderHeight}px`;
+                    // Also adjust body padding-top for initial content display
+                    document.body.style.paddingTop = `${totalHeaderHeight}px`;
+                    console.log(`[Header Update] Banner Height: ${bannerHeight}px`);
+                    console.log(`[Header Update] Nav Height: ${navHeight}px`);
+                    console.log(`[Header Update] Scroll Padding Top: ${totalHeaderHeight}px`);
+                });
+            };
+            // Function to show a specific content section and hide others
+            const showSection = (sectionId) => {
+                console.log(`Attempting to show section: ${sectionId}`);
+                let targetSectionFound = false;
+                allContentSections.forEach(section => {
+                    if (section.id === sectionId) {
+                        section.classList.add('active');
+                        targetSectionFound = true;
+                        console.log(`Section '${section.id}' activated.`);
+                    } else {
+                        section.classList.remove('active');
+                        console.log(`Section '${section.id}' deactivated.`);
+                    }
+                });
+                if (!targetSectionFound) {
+                    console.warn(`Section with ID '${sectionId}' not found. No section will be active.`);
+                    // This log helps identify if an incorrect ID is being passed.
+                }
+                const targetSection = document.getElementById(sectionId);
+                if (targetSection) {
+                    requestAnimationFrame(() => {
+                        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        console.log(`Scrolled to section: ${sectionId}`);
+                    });
+                } else {
+                    console.error(`Attempted to scroll to non-existent section: ${sectionId}`);
+                }
+            };
+            // Initial section display
+            console.log("DOM Content Loaded. Initializing home section.");
+            showSection('home-section');
+            // Event Listeners for main site Buttons (with modals reinstated)
+            if (aboutUsBtn) {
+                aboutUsBtn.addEventListener('click', () => {
+                    showSection('about');
+                    showActionModal('About Us', 'Unveiling our origin story. Proceeding to the About Us page.', 'aboutUsBtn');
+                });
+            }
+            if (learnMoreBtn) {
+                learnMoreBtn.addEventListener('click', () => {
+                    showSection('quiz-page-section'); // Link to quiz section
+                    showActionModal('Test your Knowledge', 'Are you up for the challenge? Proceeding to the quiz.', 'learnMoreBtn'); // Store source button ID
+                });
+            }
+            // Event Listeners for Navigation Links (SPA behavior)
+            navLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault(); // Prevent default link behavior
+                    console.log("Navigation link clicked.");
+                    const clickedLinkElement = event.currentTarget;
+                    const href = clickedLinkElement.getAttribute('href');
+                    console.log(`Clicked link href: ${href}`);
+                    if (href === null) {
+                        console.error("Error: Clicked navigation link is missing its href attribute.", clickedLinkElement);
+                        return;
+                    }
+                    // For the logo and home link, ensure it always goes to 'home-section'
+                    const targetId = href.substring(1);
+                    if (targetId === '' || targetId === 'home') { // Handles both empty hash and #home
+                        showSection('home-section');
+                    } else {
+                        showSection(targetId);
+                    }
+                    // Close dropdown if it's open and a planet link was clicked
+                    if (planetsDropdownContainer.classList.contains('open')) {
+                        console.log("Closing planets dropdown.");
+                        planetsDropdownContainer.classList.remove('open');
+                    }
+                });
+            });
+            // Event listener for the "Planets" dropdown toggle (click-based)
+            if (planetsDropdownToggle) {
+                planetsDropdownToggle.addEventListener('click', (event) => {
+                    event.preventDefault(); // Stop default hash link behavior
+                    planetsDropdownContainer.classList.toggle('open'); // Toggle 'open' class
+                });
+                // Close dropdown when clicking anywhere outside of it
+                document.addEventListener('click', (event) => {
+                    // Check if the click occurred outside the dropdown container AND outside the toggle button itself
+                    if (planetsDropdownContainer.classList.contains('open') &&
+                        !planetsDropdownContainer.contains(event.target) &&
+                        !planetsDropdownToggle.contains(event.target)) {
+                        planetsDropdownContainer.classList.remove('open');
+                    }
+                });
+            }
+            // Event Listeners for General Modal "Proceed" Button
+            if (modalProceedBtn) { // Using the new ID
+                modalProceedBtn.addEventListener('click', hideActionModal);
+            }
+            // Close general modal if clicking outside the content
+            if (actionModal) {
+                actionModal.addEventListener('click', (event) => {
+                    if (event.target === actionModal) {
+                        hideActionModal();
+                    }
+                });
+            }
+            // --- Quiz Page Logic ---
+            // Open Quiz button listener
+            if (openQuizBtn) {
+                openQuizBtn.addEventListener('click', () => {
+                    showSection('quiz-page-section');
+                    renderQuiz();
+                });
+            }
+            /**
+             * Renders the quiz questions and options into the HTML.
+             */
+            function renderQuiz() {
+                quizContainer.innerHTML = ''; // Clear previous questions
+                quizQuestions.forEach((q, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.classList.add('question-card', 'p-6', 'rounded-xl', 'shadow-md', 'mb-6', 'border', 'border-indigo-800', 'hover:border-indigo-600', 'transition-all');
+                    questionDiv.innerHTML = `
+                        <p class="text-xl md:text-2xl font-medium mb-4" style="color: var(--quiz-text);">${q.question}</p>
+                        <div class="options space-y-3">
+                            ${q.options.map((option, optIndex) => `
+                                <label class="block text-lg" style="color: var(--quiz-text); transition: color 0.2s ease;">
+                                    <input type="radio" name="question${index}" value="${option}" class="mr-3">
+                                    ${option}
+                                </label>
+                            `).join('')}
+                        </div>
+                    `;
+                    quizContainer.appendChild(questionDiv);
+                });
+                quizContainer.classList.remove('hidden');
+                submitQuizButton.classList.remove('hidden');
+                resultsContainer.classList.add('hidden');
+            }
+            /**
+             * Calculates the score and displays results.
+             */
+            function showResults() {
+                let score = 0;
+                feedbackDetails.innerHTML = '';
+                quizQuestions.forEach((q, index) => {
+                    const selectedInput = quizContainer.querySelector(`input[name="question${index}"]:checked`);
+                    const userAnswer = selectedInput ? selectedInput.value : null;
+                    const feedbackDiv = document.createElement('div');
+                    feedbackDiv.classList.add('p-3', 'rounded-lg', 'border', 'mb-2');
+                    if (userAnswer === q.answer) {
+                        score++;
+                        feedbackDiv.classList.add('bg-green-900');
+                        feedbackDiv.innerHTML = `<p class="font-bold text-green-300">✅ Correct! </p><p class="text-sm" style="color: var(--quiz-text);">${q.question} <br> Your Answer: ${userAnswer}</p>`;
+                    } else {
+                        feedbackDiv.classList.add('bg-red-900');
+                        feedbackDiv.innerHTML = `
+                            <p class="font-bold text-red-300">❌ Incorrect!</p>
+                            <p class="text-sm" style="color: var(--quiz-text);">${q.question}</p>
+                            <p class="text-sm" style="color: var(--quiz-text);">Your Answer: <span class="font-semibold">${userAnswer || 'No Answer'}</span></p>
+                            <p class="text-sm" style="color: var(--quiz-text);">Correct Answer: <span class="font-semibold text-green-400">✅ ${q.answer}</span></p>
+                        `;
+                    }
+                    feedbackDetails.appendChild(feedbackDiv);
+                });
+                scoreDisplay.textContent = `${score} out of ${quizQuestions.length}`;
+                resultsContainer.classList.remove('hidden');
+                quizContainer.classList.add('hidden');
+                submitQuizButton.classList.add('hidden');
+                resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            /**
+             * Resets the quiz for a new attempt.
+             */
+            function retakeQuiz() {
+                quizContainer.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = false;
+                });
+                resultsContainer.classList.add('hidden');
+                quizContainer.classList.remove('hidden');
+                submitQuizButton.classList.remove('hidden');
+                feedbackDetails.innerHTML = '';
+                quizPageSection.scrollTop = 0;
+                quizPageSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            // Event Listeners for Quiz buttons
+            submitQuizButton.addEventListener('click', showResults);
+            retakeQuizButton.addEventListener('click', retakeQuiz);
+            // Audio control logic: Autoplay with fallback for user interaction
+            const playAudioWithFallback = () => {
+                backgroundMusic.play().then(() => {
+                    console.log("Audio started playing successfully.");
+                    document.body.removeEventListener('click', playAudioWithFallback);
+                    document.body.removeEventListener('scroll', playAudioWithFallback);
+                }).catch(error => {
+                    console.warn("Audio autoplay blocked, waiting for user interaction:", error);
+                    // FIX: Changed .has to .hasAttribute
+                    if (!document.body.hasAttribute('data-audio-listener-added')) {
+                        document.body.addEventListener('click', playAudioWithFallback, { once: true });
+                        document.body.addEventListener('scroll', playAudioWithFallback, { once: true });
+                        document.body.setAttribute('data-audio-listener-added', 'true');
+                    }
+                });
+            };
+            playAudioWithFallback();
+            // --- Theme Toggle Logic ---
+            const applyTheme = (isLightMode) => {
+                if (isLightMode) {
+                    document.body.classList.add('light-mode');
+                    moonIcon.style.display = 'none';
+                    sunIcon.style.display = 'block';
+                } else {
+                    document.body.classList.remove('light-mode');
+                    moonIcon.style.display = 'block';
+                    sunIcon.style.display = 'none';
+                }
+            };
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                applyTheme(true);
+            } else {
+                applyTheme(false);
+            }
+            themeToggleBtn.addEventListener('click', () => {
+                const isLightMode = document.body.classList.contains('light-mode');
+                applyTheme(!isLightMode);
+                localStorage.setItem('theme', !isLightMode ? 'light' : 'dark');
+            });
+            // --- Three.js Rippling Stars Effect ---
+            let scene, camera, renderer, points, material;
+            let mouseX = 0, mouseY = 0;
+            let isDragging = false;
+            let previousMouseX = 0;
+            let previousMouseY = 0;
+            const canvas = document.getElementById('threeJsCanvas');
+            let animationFrameId;
+            const boxSize = 30;
+            const initThreeJs = () => {
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
+                camera.position.z = 10;
+                renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+                renderer.setSize(width, height);
+                renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.setClearAlpha(0);
+                const numStars = 15000;
+                const positions = new Float32Array(numStars * 3);
+                const sizes = new Float32Array(numStars);
+                const colors = new Float32Array(numStars * 3);
+                const starColors = [
+                    new THREE.Color(0xffffff),
+                    new THREE.Color(0xadd8e6),
+                    new THREE.Color(0xffe4b5),
+                    new THREE.Color(0xd8bfd8),
+                    new THREE.Color(0xffa07a)
+                ];
+                for (let i = 0; i < numStars; i++) {
+                    positions[i * 3] = (Math.random() * 2 - 1) * boxSize;
+                    positions[i * 3 + 1] = (Math.random() * 2 - 1) * boxSize;
+                    positions[i * 3 + 2] = (Math.random() * 2 - 1) * boxSize;
+                    sizes[i] = Math.random() * 0.8 + 0.2;
+                    const color = starColors[Math.floor(Math.random() * starColors.length)];
+                    colors[i * 3] = color.r;
+                    colors[i * 3 + 1] = color.g;
+                    colors[i * 3 + 2] = color.b;
+                }
+                const geometry = new THREE.BufferGeometry();
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+                material = new THREE.ShaderMaterial({
+                    uniforms: {
+                        time: { value: 0.0 },
+                        resolution: { value: new THREE.Vector2(width, height) },
+                        baseColor: { value: new THREE.Color(0xbb86fc) },
+                        waveColor: { value: new THREE.Color(0x82aaff) },
+                        boxSize: { value: boxSize }
+                    },
+                    vertexShader: `
+                        uniform float time;
+                        uniform float boxSize;
+                        attribute float size;
+                        attribute vec3 color;
+                        varying vec3 vColor;
+                        varying float vOpacity;
+                        void main() {
+                            vColor = color;
+                            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                            float rippleStrength = 1.5;
+                            float rippleSpeed = 0.5;
+                            float rippleFreqX = 0.7;
+                            float rippleFreqY = 0.9;
+                            float displacementZ = 0.0;
+                            displacementZ += sin(position.x * rippleFreqX + time * rippleSpeed) * rippleStrength * 0.5;
+                            displacementZ += cos(position.y * rippleFreqY + time * rippleSpeed * 0.7) * rippleStrength * 0.4;
+                            displacementZ += sin((position.x + position.y) * 0.5 + time * rippleSpeed * 1.2) * rippleStrength * 0.3;
+                            mvPosition.z += displacementZ;
+                            gl_PointSize = size * (300.0 / -mvPosition.z);
+                            vOpacity = 1.0;
+                            if (mvPosition.z > -1.0) vOpacity *= smoothstep(0.0, 1.0, (-mvPosition.z - 0.5) * 2.0);
+                            if (mvPosition.z < -boxSize + 5.0) vOpacity *= smoothstep(0.0, 1.0, (mvPosition.z + boxSize - 5.0) / 5.0);
+                            gl_Position = projectionMatrix * mvPosition;
+                        }
+                    `,
+                    fragmentShader: `
+                        uniform sampler2D pointTexture;
+                        uniform vec3 baseColor;
+                        uniform vec3 waveColor;
+                        uniform float time;
+                        varying vec3 vColor;
+                        varying float vOpacity;
+                        void main() {
+                            float r = distance(gl_PointCoord, vec2(0.5, 0.5));
+                            if (r > 0.5) discard;
+                            float strength = 1.0 - r * 2.0;
+                            strength = pow(strength, 2.0);
+                            vec3 finalStarColor = vColor * strength;
+                            float sparkle = sin(vColor.r * 10.0 + time * 5.0) * 0.2 + 0.8;
+                            finalStarColor *= sparkle;
+                            gl_FragColor = vec4(finalStarColor, strength * vOpacity * 0.2);
+                        }
+                    `,
+                    transparent: true,
+                    blending: THREE.AdditiveBlending,
+                    depthWrite: false
+                });
+                points = new THREE.Points(geometry, material);
+                scene.add(points);
+                document.addEventListener('mousemove', (event) => {
+                    mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                    mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+                });
+                canvas.addEventListener('mousedown', (event) => {
+                    isDragging = true;
+                    previousMouseX = event.clientX;
+                    previousMouseY = event.clientY;
+                });
+                canvas.addEventListener('mouseup', () => {
+                    isDragging = false;
+                });
+                canvas.addEventListener('mousemove', (event) => {
+                    if (isDragging) {
+                        const deltaX = event.clientX - previousMouseX;
+                        const deltaY = event.clientY - previousMouseY;
+                        const rotationSpeed = 0.01;
+                        const angleY = deltaX * rotationSpeed;
+                        const angleX = deltaY * rotationSpeed;
+                        const spherical = new THREE.Spherical().setFromVector3(camera.position);
+                        spherical.theta -= angleY;
+                        spherical.phi -= angleX;
+                        spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi));
+                        camera.position.setFromSpherical(spherical);
+                        camera.lookAt(new THREE.Vector3(0, 0, 0));
+                        previousMouseX = event.clientX;
+                        previousMouseY = event.clientY;
+                    }
+                });
+            };
+            const animate = () => {
+                animationFrameId = requestAnimationFrame(animate);
+                if (material) {
+                    material.uniforms.time.value += 0.005;
+                }
+                if (camera && !isDragging) {
+                     camera.position.x += (mouseX * 2 - camera.position.x) * 0.05;
+                     camera.position.y += (mouseY * 2 - camera.position.y) * 0.05;
+                     camera.lookAt(new THREE.Vector3(0,0,0));
+                }
+                if (renderer && scene && camera) {
+                    renderer.render(scene, camera);
+                }
+            };
+            const onWindowResize = () => {
+                if (camera && renderer) {
+                    const width = window.innerWidth;
+                    const height = window.innerHeight;
+                    camera.aspect = width / height;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(width, height);
+                    if (material && material.uniforms.resolution) {
+                        material.uniforms.resolution.value.set(width, height);
+                    }
+                }
+                updateHeaderPositions();
+            };
+            window.onload = function () {
+                initThreeJs();
+                animate();
+            };
+            window.addEventListener('resize', onWindowResize);
+            window.addEventListener('beforeunload', () => {
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                }
+                if (renderer) {
+                    renderer.dispose();
+                }
+                if (scene) {
+                    scene.clear();
+                }
+            });
+            updateHeaderPositions();
+        });
+    </script>
+</body>
+</html>
